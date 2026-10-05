@@ -1,0 +1,819 @@
+/* TUGEN UI-kit для веба. Собрано из tokens/tokens.json командой yarn css — не править руками.
+ * Тема — как в системе; data-theme="light" | "dark" на <html> задаёт её явно. */
+
+:root {
+  color-scheme: light dark;
+  --tg-mist-50: #f9fbfb;
+  --tg-mist-100: #f1f3f3;
+  --tg-mist-200: #e3e7e8;
+  --tg-mist-300: #d0d6d8;
+  --tg-mist-400: #9ca8ab;
+  --tg-mist-500: #67787c;
+  --tg-mist-600: #4b585b;
+  --tg-mist-700: #394447;
+  --tg-mist-800: #22292b;
+  --tg-mist-900: #161b1d;
+  --tg-mist-950: #090b0c;
+  --tg-blue-50: #eff6ff;
+  --tg-blue-100: #dbeafe;
+  --tg-blue-200: #bedbff;
+  --tg-blue-300: #8ec5ff;
+  --tg-blue-400: #51a2ff;
+  --tg-blue-500: #2b7fff;
+  --tg-blue-600: #155dfc;
+  --tg-blue-700: #1447e6;
+  --tg-blue-800: #193cb8;
+  --tg-blue-900: #1c398e;
+  --tg-blue-950: #162456;
+  --tg-green-50: #f0fdf4;
+  --tg-green-100: #dcfce7;
+  --tg-green-200: #b9f8cf;
+  --tg-green-300: #7bf1a8;
+  --tg-green-400: #05df72;
+  --tg-green-500: #00c951;
+  --tg-green-600: #00a63e;
+  --tg-green-700: #008236;
+  --tg-green-800: #016630;
+  --tg-green-900: #0d542b;
+  --tg-green-950: #032e15;
+  --tg-red-50: #fef2f2;
+  --tg-red-100: #ffe2e2;
+  --tg-red-200: #ffc9c9;
+  --tg-red-300: #ffa2a2;
+  --tg-red-400: #ff6467;
+  --tg-red-500: #fb2c36;
+  --tg-red-600: #e7000b;
+  --tg-red-700: #c10007;
+  --tg-red-800: #9f0712;
+  --tg-red-900: #82181a;
+  --tg-red-950: #460809;
+  --tg-amber-50: #fffbeb;
+  --tg-amber-100: #fef3c6;
+  --tg-amber-200: #fee685;
+  --tg-amber-300: #ffd230;
+  --tg-amber-400: #ffba00;
+  --tg-amber-500: #fd9a00;
+  --tg-amber-600: #e17100;
+  --tg-amber-700: #bb4d00;
+  --tg-amber-800: #973c00;
+  --tg-amber-900: #7b3306;
+  --tg-amber-950: #461901;
+  --tg-violet-50: #f5f3ff;
+  --tg-violet-100: #ede9fe;
+  --tg-violet-200: #ddd6ff;
+  --tg-violet-300: #c4b4ff;
+  --tg-violet-400: #a684ff;
+  --tg-violet-500: #8e51ff;
+  --tg-violet-600: #7f22fe;
+  --tg-violet-700: #7008e7;
+  --tg-violet-800: #5d0ec0;
+  --tg-violet-900: #4d179a;
+  --tg-violet-950: #2f0d68;
+  --tg-white: #ffffff;
+  --tg-radius-sm: 4px;
+  --tg-radius-md: 6px;
+  --tg-radius-lg: 8px;
+  --tg-radius-xl: 12px;
+  --tg-radius-2xl: 16px;
+  --tg-radius-full: 9999px;
+  --tg-space-1: 4px;
+  --tg-space-2: 8px;
+  --tg-space-3: 12px;
+  --tg-space-4: 16px;
+  --tg-space-6: 24px;
+  --tg-space-8: 32px;
+  --tg-space-0_5: 2px;
+  --tg-space-1_5: 6px;
+  --tg-text-xs: 12px;
+  --tg-leading-xs: 16px;
+  --tg-text-sm: 14px;
+  --tg-leading-sm: 20px;
+  --tg-text-base: 16px;
+  --tg-leading-base: 24px;
+  --tg-text-lg: 18px;
+  --tg-leading-lg: 28px;
+  --tg-text-xl: 20px;
+  --tg-leading-xl: 28px;
+  --tg-text-2xl: 24px;
+  --tg-leading-2xl: 32px;
+  --tg-text-3xl: 30px;
+  --tg-leading-3xl: 36px;
+  --tg-font-sans: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --tg-font-mono: Consolas, "Cascadia Mono", ui-monospace, monospace;
+  --tg-hover-in: 100ms;
+  --tg-hover-out: 180ms;
+  --tg-press-in: 60ms;
+  --tg-press-out: 180ms;
+  --tg-appear: 120ms;
+  --tg-toggle: 140ms;
+  --tg-layout: 180ms;
+  --tg-deselect: 250ms;
+  --tg-dimmed: 0.5;
+  --tg-window: #f1f3f3;
+  --tg-page: #f9fbfb;
+  --tg-card: #f1f3f3;
+  --tg-overlay: #f9fbfb;
+  --tg-overlay-border: #e3e7e8;
+  --tg-field: #f1f3f3;
+  --tg-field-border: #e3e7e8;
+  --tg-neutral: #e3e7e8;
+  --tg-neutral-hover: #d0d6d8;
+  --tg-neutral-press: #9ca8ab;
+  --tg-divider: #e3e7e8;
+  --tg-scrim: rgba(9, 11, 12, 0.5);
+  --tg-hover: rgba(9, 11, 12, 0.05);
+  --tg-press: rgba(9, 11, 12, 0.1);
+  --tg-text: #090b0c;
+  --tg-text-secondary: #394447;
+  --tg-text-muted: #67787c;
+  --tg-text-faint: #9ca8ab;
+  --tg-text-on-neutral: #161b1d;
+  --tg-text-on-accent: #f9fbfb;
+  --tg-placeholder: #9ca8ab;
+  --tg-accent: #2b7fff;
+  --tg-accent-hover: #155dfc;
+  --tg-accent-press: #1447e6;
+  --tg-play: #00a63e;
+  --tg-play-hover: #008236;
+  --tg-play-press: #016630;
+  --tg-focus: #2b7fff;
+  --tg-invalid: #fb2c36;
+  --tg-info: #155dfc;
+  --tg-success: #00a63e;
+  --tg-danger: #e7000b;
+  --tg-warning: #e17100;
+  --tg-special: #7008e7;
+  --tg-icon-danger: #fb2c36;
+  --tg-track: #d0d6d8;
+  --tg-knob: #f9fbfb;
+  --tg-slider-fill: #090b0c;
+  --tg-segment-active: #f9fbfb;
+  --tg-segment-hover: #d0d6d8;
+  --tg-segment-press: #d0d6d8;
+  --tg-pill-neutral: #e3e7e8;
+  --tg-pill-neutral-text: #4b585b;
+  --tg-pill-amber: rgba(253, 154, 0, 0.15);
+  --tg-pill-amber-text: #bb4d00;
+  --tg-pill-green: rgba(0, 201, 81, 0.15);
+  --tg-pill-green-text: #008236;
+  --tg-pill-red: rgba(251, 44, 54, 0.15);
+  --tg-pill-red-text: #c10007;
+  --tg-pill-violet: rgba(142, 81, 255, 0.15);
+  --tg-pill-violet-text: #7008e7;
+  --tg-pill-danger: #e7000b;
+  --tg-pill-danger-text: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --tg-window: #161b1d;
+    --tg-page: #090b0c;
+    --tg-card: #161b1d;
+    --tg-overlay: #161b1d;
+    --tg-overlay-border: #22292b;
+    --tg-field: #161b1d;
+    --tg-field-border: #22292b;
+    --tg-neutral: #22292b;
+    --tg-neutral-hover: #394447;
+    --tg-neutral-press: #4b585b;
+    --tg-divider: #22292b;
+    --tg-scrim: rgba(9, 11, 12, 0.5);
+    --tg-hover: rgba(249, 251, 251, 0.05);
+    --tg-press: rgba(249, 251, 251, 0.1);
+    --tg-text: #f9fbfb;
+    --tg-text-secondary: #d0d6d8;
+    --tg-text-muted: #9ca8ab;
+    --tg-text-faint: #67787c;
+    --tg-text-on-neutral: #f1f3f3;
+    --tg-text-on-accent: #f9fbfb;
+    --tg-placeholder: #67787c;
+    --tg-accent: #2b7fff;
+    --tg-accent-hover: #155dfc;
+    --tg-accent-press: #1447e6;
+    --tg-play: #00a63e;
+    --tg-play-hover: #008236;
+    --tg-play-press: #016630;
+    --tg-focus: #2b7fff;
+    --tg-invalid: #fb2c36;
+    --tg-info: #51a2ff;
+    --tg-success: #05df72;
+    --tg-danger: #ff6467;
+    --tg-warning: #ffba00;
+    --tg-special: #a684ff;
+    --tg-icon-danger: #ff6467;
+    --tg-track: #394447;
+    --tg-knob: #f9fbfb;
+    --tg-slider-fill: #f9fbfb;
+    --tg-segment-active: #394447;
+    --tg-segment-hover: #394447;
+    --tg-segment-press: #4b585b;
+    --tg-pill-neutral: #22292b;
+    --tg-pill-neutral-text: #9ca8ab;
+    --tg-pill-amber: rgba(253, 154, 0, 0.15);
+    --tg-pill-amber-text: #ffba00;
+    --tg-pill-green: rgba(0, 201, 81, 0.15);
+    --tg-pill-green-text: #05df72;
+    --tg-pill-red: rgba(251, 44, 54, 0.15);
+    --tg-pill-red-text: #ff6467;
+    --tg-pill-violet: rgba(142, 81, 255, 0.15);
+    --tg-pill-violet-text: #a684ff;
+    --tg-pill-danger: #e7000b;
+    --tg-pill-danger-text: #ffffff;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --tg-window: #161b1d;
+  --tg-page: #090b0c;
+  --tg-card: #161b1d;
+  --tg-overlay: #161b1d;
+  --tg-overlay-border: #22292b;
+  --tg-field: #161b1d;
+  --tg-field-border: #22292b;
+  --tg-neutral: #22292b;
+  --tg-neutral-hover: #394447;
+  --tg-neutral-press: #4b585b;
+  --tg-divider: #22292b;
+  --tg-scrim: rgba(9, 11, 12, 0.5);
+  --tg-hover: rgba(249, 251, 251, 0.05);
+  --tg-press: rgba(249, 251, 251, 0.1);
+  --tg-text: #f9fbfb;
+  --tg-text-secondary: #d0d6d8;
+  --tg-text-muted: #9ca8ab;
+  --tg-text-faint: #67787c;
+  --tg-text-on-neutral: #f1f3f3;
+  --tg-text-on-accent: #f9fbfb;
+  --tg-placeholder: #67787c;
+  --tg-accent: #2b7fff;
+  --tg-accent-hover: #155dfc;
+  --tg-accent-press: #1447e6;
+  --tg-play: #00a63e;
+  --tg-play-hover: #008236;
+  --tg-play-press: #016630;
+  --tg-focus: #2b7fff;
+  --tg-invalid: #fb2c36;
+  --tg-info: #51a2ff;
+  --tg-success: #05df72;
+  --tg-danger: #ff6467;
+  --tg-warning: #ffba00;
+  --tg-special: #a684ff;
+  --tg-icon-danger: #ff6467;
+  --tg-track: #394447;
+  --tg-knob: #f9fbfb;
+  --tg-slider-fill: #f9fbfb;
+  --tg-segment-active: #394447;
+  --tg-segment-hover: #394447;
+  --tg-segment-press: #4b585b;
+  --tg-pill-neutral: #22292b;
+  --tg-pill-neutral-text: #9ca8ab;
+  --tg-pill-amber: rgba(253, 154, 0, 0.15);
+  --tg-pill-amber-text: #ffba00;
+  --tg-pill-green: rgba(0, 201, 81, 0.15);
+  --tg-pill-green-text: #05df72;
+  --tg-pill-red: rgba(251, 44, 54, 0.15);
+  --tg-pill-red-text: #ff6467;
+  --tg-pill-violet: rgba(142, 81, 255, 0.15);
+  --tg-pill-violet-text: #a684ff;
+  --tg-pill-danger: #e7000b;
+  --tg-pill-danger-text: #ffffff;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+/* Основа: страница TUGEN */
+.tg-root {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--tg-page);
+  color: var(--tg-text);
+  font-family: var(--tg-font-sans);
+  font-size: var(--tg-text-sm);
+  line-height: var(--tg-leading-sm);
+  -webkit-font-smoothing: antialiased;
+}
+
+.tg-root *,
+.tg-root *::before,
+.tg-root *::after {
+  box-sizing: border-box;
+}
+
+/* Текст */
+.tg-text {
+  margin: 0;
+  color: var(--tg-text);
+  font-size: var(--tg-text-sm);
+  line-height: var(--tg-leading-sm);
+}
+.tg-text--xs {
+  font-size: var(--tg-text-xs);
+  line-height: var(--tg-leading-xs);
+}
+.tg-text--sm {
+  font-size: var(--tg-text-sm);
+  line-height: var(--tg-leading-sm);
+}
+.tg-text--base {
+  font-size: var(--tg-text-base);
+  line-height: var(--tg-leading-base);
+}
+.tg-text--lg {
+  font-size: var(--tg-text-lg);
+  line-height: var(--tg-leading-lg);
+}
+.tg-text--xl {
+  font-size: var(--tg-text-xl);
+  line-height: var(--tg-leading-xl);
+}
+.tg-text--2xl {
+  font-size: var(--tg-text-2xl);
+  line-height: var(--tg-leading-2xl);
+}
+.tg-text--3xl {
+  font-size: var(--tg-text-3xl);
+  line-height: var(--tg-leading-3xl);
+}
+.tg-text--semibold {
+  font-weight: 600;
+}
+.tg-text--bold {
+  font-weight: 700;
+}
+.tg-text--mono {
+  font-family: var(--tg-font-mono);
+}
+.tg-text--upper {
+  text-transform: uppercase;
+}
+.tg-text--secondary {
+  color: var(--tg-text-secondary);
+}
+.tg-text--muted {
+  color: var(--tg-text-muted);
+}
+.tg-text--faint {
+  color: var(--tg-text-faint);
+}
+.tg-text--info {
+  color: var(--tg-info);
+}
+.tg-text--success {
+  color: var(--tg-success);
+}
+.tg-text--danger {
+  color: var(--tg-danger);
+}
+.tg-text--warning {
+  color: var(--tg-warning);
+}
+.tg-text--special {
+  color: var(--tg-special);
+}
+
+/* Кнопки: primary — главное действие, secondary — нейтральная, play — только запуск игры */
+.tg-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: var(--tg-radius-lg);
+  font: inherit;
+  font-size: var(--tg-text-sm);
+  line-height: var(--tg-leading-sm);
+  white-space: nowrap;
+  cursor: pointer;
+  background: var(--tg-accent);
+  color: var(--tg-text-on-accent);
+  transition: background-color var(--tg-hover-out) ease-out, transform var(--tg-press-out) ease-out;
+}
+.tg-button:hover {
+  background: var(--tg-accent-hover);
+  transition-duration: var(--tg-hover-in);
+}
+.tg-button:active {
+  background: var(--tg-accent-press);
+  transform: scale(0.97);
+  transition-duration: var(--tg-press-in);
+}
+.tg-button--secondary {
+  background: var(--tg-neutral);
+  color: var(--tg-text-on-neutral);
+}
+.tg-button--secondary:hover {
+  background: var(--tg-neutral-hover);
+}
+.tg-button--secondary:active {
+  background: var(--tg-neutral-press);
+}
+.tg-button--play {
+  background: var(--tg-play);
+}
+.tg-button--play:hover {
+  background: var(--tg-play-hover);
+}
+.tg-button--play:active {
+  background: var(--tg-play-press);
+}
+.tg-button--sm {
+  padding: 6px 12px;
+}
+.tg-button--grow {
+  flex: 1;
+}
+.tg-button:disabled,
+.tg-icon-button:disabled,
+.tg-toggle:disabled,
+.tg-check-row:has(:disabled),
+.tg-field:disabled {
+  opacity: var(--tg-dimmed);
+  pointer-events: none;
+}
+
+/* Кнопка-иконка: фон проявляется при наведении */
+.tg-icon-button {
+  display: inline-flex;
+  padding: 6px;
+  border: 0;
+  border-radius: var(--tg-radius-lg);
+  background: transparent;
+  color: var(--tg-text-muted);
+  cursor: pointer;
+  transition: background-color var(--tg-hover-out) ease-out, transform var(--tg-press-out) ease-out;
+}
+.tg-icon-button:hover {
+  background: var(--tg-hover);
+}
+.tg-icon-button:active {
+  background: var(--tg-press);
+  transform: scale(0.9);
+}
+.tg-icon-button--danger {
+  color: var(--tg-icon-danger);
+}
+.tg-icon-button--success {
+  color: var(--tg-success);
+}
+.tg-icon-button svg,
+.tg-button svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+.tg-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Переключатель: <input type="checkbox" class="tg-toggle"> */
+.tg-toggle {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 36px;
+  height: 20px;
+  margin: 0;
+  border-radius: var(--tg-radius-full);
+  background: var(--tg-track);
+  cursor: pointer;
+  transition: background-color var(--tg-toggle) ease-out;
+}
+.tg-toggle::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--tg-radius-full);
+  background: var(--tg-knob);
+  transition: transform var(--tg-toggle) ease-in-out;
+}
+.tg-toggle:checked {
+  background: var(--tg-accent);
+}
+.tg-toggle:checked::before {
+  transform: translateX(16px);
+}
+
+/* Флажок с подписью: <label class="tg-check-row"><input type="checkbox" class="tg-checkbox">…</label> */
+.tg-check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px;
+  border-radius: var(--tg-radius-lg);
+  cursor: pointer;
+  transition: background-color var(--tg-hover-out) ease-out;
+}
+.tg-check-row:hover {
+  background: var(--tg-hover);
+}
+.tg-checkbox {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  border: 1px solid var(--tg-track);
+  border-radius: var(--tg-radius-md);
+  cursor: pointer;
+}
+.tg-checkbox:checked {
+  border-color: var(--tg-accent);
+  background: var(--tg-accent);
+}
+.tg-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--tg-text-on-accent);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Поле ввода: aria-invalid="true" — красная рамка */
+.tg-field {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--tg-field-border);
+  border-radius: var(--tg-radius-lg);
+  background: var(--tg-field);
+  color: var(--tg-text);
+  font: inherit;
+  font-size: var(--tg-text-sm);
+  line-height: var(--tg-leading-sm);
+  outline: none;
+}
+.tg-field::placeholder {
+  color: var(--tg-placeholder);
+}
+.tg-field:focus {
+  border-color: var(--tg-focus);
+}
+.tg-field[aria-invalid='true'] {
+  border-color: var(--tg-invalid);
+}
+.tg-field--mono {
+  font-family: var(--tg-font-mono);
+}
+
+/* Сегменты: <div class="tg-segmented" role="radiogroup"><button class="tg-segment" aria-checked="true"> */
+.tg-segmented {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--tg-radius-full);
+  background: var(--tg-neutral);
+}
+.tg-segment {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: var(--tg-radius-full);
+  text-align: center;
+  background: transparent;
+  color: var(--tg-text-muted);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color var(--tg-deselect) ease-out, color var(--tg-deselect) ease-out;
+}
+.tg-segment:hover {
+  background: var(--tg-segment-hover);
+  color: var(--tg-text);
+}
+.tg-segment[aria-checked='true'] {
+  background: var(--tg-segment-active);
+  color: var(--tg-text);
+  transition-duration: var(--tg-layout);
+}
+.tg-segment:active {
+  background: var(--tg-segment-press);
+}
+
+/* Ползунок: <input type="range" class="tg-slider"> */
+.tg-slider {
+  appearance: none;
+  width: 100%;
+  height: 24px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.tg-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: var(--tg-radius-full);
+  background: var(--tg-neutral);
+}
+.tg-slider::-moz-range-track {
+  height: 4px;
+  border-radius: var(--tg-radius-full);
+  background: var(--tg-neutral);
+}
+.tg-slider::-moz-range-progress {
+  height: 4px;
+  border-radius: var(--tg-radius-full);
+  background: var(--tg-slider-fill);
+}
+.tg-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  margin-top: -4px;
+  border-radius: var(--tg-radius-full);
+  background: var(--tg-slider-fill);
+}
+.tg-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: 0;
+  border-radius: var(--tg-radius-full);
+  background: var(--tg-slider-fill);
+}
+
+/* Метки */
+.tg-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: var(--tg-radius-md);
+  font-size: var(--tg-text-xs);
+  line-height: var(--tg-leading-xs);
+}
+.tg-pill--neutral {
+  background: var(--tg-pill-neutral);
+  color: var(--tg-pill-neutral-text);
+}
+.tg-pill--amber {
+  background: var(--tg-pill-amber);
+  color: var(--tg-pill-amber-text);
+}
+.tg-pill--green {
+  background: var(--tg-pill-green);
+  color: var(--tg-pill-green-text);
+}
+.tg-pill--red {
+  background: var(--tg-pill-red);
+  color: var(--tg-pill-red-text);
+}
+.tg-pill--violet {
+  background: var(--tg-pill-violet);
+  color: var(--tg-pill-violet-text);
+}
+.tg-pill--danger {
+  background: var(--tg-pill-danger);
+  color: var(--tg-pill-danger-text);
+}
+
+/* Поверхности: уровни разделяются цветом и рамкой, без теней */
+.tg-surface--window {
+  background: var(--tg-window);
+}
+.tg-surface--page {
+  background: var(--tg-page);
+}
+.tg-card {
+  border-radius: var(--tg-radius-xl);
+  background: var(--tg-card);
+}
+.tg-overlay {
+  border: 1px solid var(--tg-overlay-border);
+  border-radius: var(--tg-radius-xl);
+  background: var(--tg-overlay);
+}
+.tg-divider {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: var(--tg-divider);
+}
+.tg-card > .tg-divider {
+  margin: 0 16px;
+}
+.tg-scrim {
+  background: var(--tg-scrim);
+}
+
+/* Ряд элементов с промежутком: кнопки, метки */
+.tg-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Раздел и строки карточки */
+.tg-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tg-section__title {
+  margin: 0;
+  color: var(--tg-text-muted);
+  font-size: var(--tg-text-xs);
+  line-height: var(--tg-leading-xs);
+  font-weight: 400;
+  text-transform: uppercase;
+}
+.tg-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+}
+.tg-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.tg-row__description {
+  color: var(--tg-text-muted);
+  font-size: var(--tg-text-xs);
+  line-height: var(--tg-leading-xs);
+}
+.tg-row__controls {
+  width: 224px;
+  max-width: 100%;
+}
+.tg-row__controls--wide {
+  width: 320px;
+}
+
+/* Пустое состояние */
+.tg-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 448px;
+  margin: 0 auto;
+  padding: 24px;
+  text-align: center;
+}
+.tg-empty__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--tg-radius-2xl);
+  background: var(--tg-card);
+  color: var(--tg-text-muted);
+}
+.tg-empty__icon svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+.tg-empty__title {
+  margin: 0;
+  font-size: var(--tg-text-base);
+  line-height: var(--tg-leading-base);
+  font-weight: 700;
+}
+.tg-empty__text {
+  margin: 0;
+  color: var(--tg-text-muted);
+}
+
+/* Заглушка загрузки: вместо спиннера */
+.tg-skeleton {
+  border-radius: var(--tg-radius-md);
+  background: var(--tg-neutral);
+  animation: tg-pulse 1400ms ease-in-out infinite;
+}
+@keyframes tg-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tg-root *,
+  .tg-root *::before,
+  .tg-root *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

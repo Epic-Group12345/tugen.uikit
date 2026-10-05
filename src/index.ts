@@ -3,16 +3,23 @@
 // Для веба без React — css/tugen.css и nim/tugen_uikit.nim из тех же токенов
 
 export * from './tokens';
-export { ThemeProvider, useTheme } from './theme';
 export {
   StateLayers,
+  nativeDriver,
   useAnimatedFlag,
+  useAppear,
   useFlipOffset,
   usePressFeedback,
   type StateLayer,
 } from './animation';
 export type { IconComponent } from './components/icon';
-export { Text, type TextProps, type TextTone } from './components/text';
+export {
+  Text,
+  type TextProps,
+  type TextSize,
+  type TextTone,
+  type TextWeight,
+} from './components/text';
 export {
   Button,
   IconButton,

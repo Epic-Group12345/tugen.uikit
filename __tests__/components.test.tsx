@@ -16,19 +16,17 @@ import {
   Surface,
   Text,
   TextField,
-  ThemeProvider,
   Toggle,
-  themes,
-  type ColorScheme,
 } from '../src';
 
 (
   globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
 ).IS_REACT_ACT_ENVIRONMENT = true;
 
-const Dot: React.FC<{ size?: number; color?: string }> = ({ size, color }) => (
-  <span data-icon={`${size}:${color}`} />
-);
+const Dot: React.FC<{ size?: number; className?: string }> = ({
+  size,
+  className,
+}) => <span data-icon={`${size}:${className}`} />;
 
 const Everything: React.FC = () => (
   <Surface kind="page">
@@ -74,22 +72,15 @@ const mount = (node: React.ReactElement) => {
   return { container, unmount: () => act(() => root.unmount()) };
 };
 
-it.each<ColorScheme>(['light', 'dark'])(
-  'все элементы рисуются в теме %s',
-  scheme => {
-    const { container, unmount } = mount(
-      <ThemeProvider scheme={scheme}>
-        <Everything />
-      </ThemeProvider>,
-    );
-    const html = container.innerHTML;
-    expect(html).toContain('Играть');
-    expect(html).toContain('role="switch"');
-    // Иконка получает цвет темы: у красной кнопки-иконки — iconDanger
-    expect(html).toContain(`data-icon="16:${themes[scheme].iconDanger}"`);
-    unmount();
-  },
-);
+it('все элементы рисуются', () => {
+  const { container, unmount } = mount(<Everything />);
+  const html = container.innerHTML;
+  expect(html).toContain('Играть');
+  expect(html).toContain('role="switch"');
+  // Цвета — классами Uniwind, включая пару для тёмной темы
+  expect(html).toContain('data-icon="16:text-red-500 dark:text-red-400"');
+  unmount();
+});
 
 it('кнопка и переключатель отвечают на нажатие', () => {
   const onPress = jest.fn();

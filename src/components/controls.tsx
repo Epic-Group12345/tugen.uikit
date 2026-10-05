@@ -11,16 +11,16 @@ import {
   useFlipOffset,
   usePressFeedback,
 } from '../animation';
-import { useTheme } from '../theme';
-import { motion, radius } from '../tokens';
+import { motion } from '../tokens';
 import type { IconComponent } from './icon';
 import { Text } from './text';
 
 const DIMMED = { opacity: motion.dimmed };
 
 // Переключатель «вкл / выкл»: дорожка с бегунком, включённый — синий. Бегунок стоит на месте
-// отступом, а едет FLIP-сдвигом, который в покое 0 (см. useFlipOffset). Цвет дорожки — слоями
-// прозрачности, а не сменой цвета: иначе он прыгал бы раньше бегунка
+// раскладкой (отступом), а едет FLIP-сдвигом, который в покое 0: сдвиг из флага (0…1) держал бы
+// в props JS-копию стартового значения, а RNW складывает её с нативной (см. lib/animation).
+// Цвет дорожки — слоями прозрачности, а не сменой класса: иначе он прыгал бы раньше бегунка
 
 const TRACK = { width: 36, height: 20 };
 const KNOB = 16;
@@ -40,7 +40,6 @@ export const Toggle: React.FC<ToggleProps> = ({
   disabled = false,
   accessibilityLabel,
 }) => {
-  const { colors } = useTheme();
   const { hover, pressStyle, handlers } = usePressFeedback({
     disabled,
     scale: 0.94,
@@ -66,32 +65,23 @@ export const Toggle: React.FC<ToggleProps> = ({
       style={disabled ? DIMMED : undefined}
     >
       <Animated.View
-        style={[
-          TRACK,
-          { padding: PAD, borderRadius: radius.full, overflow: 'hidden' },
-          pressStyle,
-        ]}
+        style={[TRACK, pressStyle]}
+        className="rounded-full p-0.5 overflow-hidden"
       >
         <StateLayers
-          radius={radius.full}
+          className="rounded-full"
           layers={[
-            { color: colors.track },
-            { color: colors.accent, progress: on },
-            { color: colors.press, progress: hover },
+            { className: 'bg-mist-300 dark:bg-mist-700' },
+            { className: 'bg-blue-500', progress: on },
+            { className: 'bg-mist-950/10 dark:bg-mist-50/10', progress: hover },
           ]}
         />
         <Animated.View
           pointerEvents="none"
-          style={[
-            {
-              width: KNOB,
-              height: KNOB,
-              borderRadius: radius.full,
-              backgroundColor: colors.knob,
-            },
-            knob,
-          ]}
-        />
+          style={[{ width: KNOB, height: KNOB }, knob]}
+        >
+          <View className="flex-1 rounded-full bg-mist-50" />
+        </Animated.View>
       </Animated.View>
     </Pressable>
   );
@@ -108,8 +98,8 @@ export interface SliderProps {
 const THUMB = 12;
 
 /**
- * Ползунок: нажатие ставит значение, протягивание меняет. Место касания берём от самой
- * дорожки: у заливки и кружка pointerEvents='none'
+ * Ползунок: нажатие ставит значение, протягивание меняет. Дорожка с заливкой до значения и
+ * кружок. Место касания берём от самой дорожки: у заливки и кружка pointerEvents='none'
  */
 export const Slider: React.FC<SliderProps> = ({
   value,
@@ -118,7 +108,6 @@ export const Slider: React.FC<SliderProps> = ({
   onChange,
   accessibilityLabel,
 }) => {
-  const { colors } = useTheme();
   const [width, setWidth] = useState(0);
   const widthRef = useRef(0);
   const share =
@@ -147,35 +136,25 @@ export const Slider: React.FC<SliderProps> = ({
       onResponderTerminationRequest={() => false}
       onResponderGrant={pick}
       onResponderMove={pick}
-      style={{ height: 24, justifyContent: 'center' }}
+      className="h-6 justify-center"
     >
       <View
         pointerEvents="none"
-        style={{
-          height: 4,
-          borderRadius: radius.full,
-          backgroundColor: colors.neutral,
-          overflow: 'hidden',
-        }}
+        className="h-1 rounded-full bg-mist-200 dark:bg-mist-800 overflow-hidden"
       >
         <View
-          style={{
-            width: width * share,
-            height: '100%',
-            backgroundColor: colors.sliderFill,
-          }}
+          style={{ width: width * share }}
+          className="h-full bg-mist-950 dark:bg-mist-50"
         />
       </View>
       <View
         pointerEvents="none"
         style={{
-          position: 'absolute',
           left: Math.max(0, width * share - THUMB / 2),
           width: THUMB,
           height: THUMB,
-          borderRadius: radius.full,
-          backgroundColor: colors.sliderFill,
         }}
+        className="absolute rounded-full bg-mist-950 dark:bg-mist-50"
       />
     </View>
   );
@@ -199,14 +178,16 @@ const Segment: React.FC<{
   isActive: boolean;
   onPress: () => void;
 }> = ({ label, icon: Icon, isActive, onPress }) => {
-  const { colors } = useTheme();
   const { hovered, hover, press, pressStyle, handlers } = usePressFeedback();
   const active = useAnimatedFlag(isActive, {
     in: motion.layout,
     out: motion.deselect,
   });
   // Иконка и подпись одного цвета: яркие у выбранного варианта и при наведении
-  const content = isActive || hovered ? colors.text : colors.textMuted;
+  const content =
+    isActive || hovered
+      ? 'text-mist-950 dark:text-mist-50'
+      : 'text-mist-500 dark:text-mist-400';
 
   return (
     <Pressable
@@ -214,29 +195,20 @@ const Segment: React.FC<{
       accessibilityRole="radio"
       aria-checked={isActive}
       onPress={onPress}
-      style={{ flex: 1 }}
+      className="flex-1"
     >
       <Animated.View style={pressStyle}>
         <StateLayers
-          radius={radius.full}
+          className="rounded-full"
           layers={[
-            { color: colors.segmentHover, progress: hover },
-            { color: colors.segmentActive, progress: active },
-            { color: colors.segmentPress, progress: press },
+            { className: 'bg-mist-300 dark:bg-mist-700', progress: hover },
+            { className: 'bg-mist-50 dark:bg-mist-700', progress: active },
+            { className: 'bg-mist-300 dark:bg-mist-600', progress: press },
           ]}
         />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 6,
-            paddingHorizontal: 12,
-            paddingVertical: 6,
-          }}
-        >
-          {Icon && <Icon size={14} color={content} />}
-          <Text numberOfLines={1} style={{ color: content }}>
+        <View className="flex-row items-center justify-center gap-1.5 px-3 py-1.5">
+          {Icon && <Icon size={14} className={content} />}
+          <Text numberOfLines={1} className={content}>
             {label}
           </Text>
         </View>
@@ -250,31 +222,22 @@ export const Segmented = <T extends string>({
   options,
   value,
   onChange,
-}: SegmentedProps<T>) => {
-  const { colors } = useTheme();
-  return (
-    <View
-      accessibilityRole="radiogroup"
-      style={{
-        flexDirection: 'row',
-        gap: 2,
-        padding: 2,
-        borderRadius: radius.full,
-        backgroundColor: colors.neutral,
-      }}
-    >
-      {options.map(option => (
-        <Segment
-          key={option.value}
-          label={option.label}
-          icon={option.icon}
-          isActive={option.value === value}
-          onPress={() => onChange(option.value)}
-        />
-      ))}
-    </View>
-  );
-};
+}: SegmentedProps<T>) => (
+  <View
+    accessibilityRole="radiogroup"
+    className="flex-row gap-0.5 p-0.5 rounded-full bg-mist-200 dark:bg-mist-800"
+  >
+    {options.map(option => (
+      <Segment
+        key={option.value}
+        label={option.label}
+        icon={option.icon}
+        isActive={option.value === value}
+        onPress={() => onChange(option.value)}
+      />
+    ))}
+  </View>
+);
 
 export interface CheckRowProps {
   label: string;
@@ -282,32 +245,32 @@ export interface CheckRowProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
   disabled?: boolean;
+  /** Галочка выбранного: `Icons.Check` лаунчера. Без неё — своя из уголка */
+  checkIcon?: IconComponent;
 }
 
 // Галочка из двух сторон повёрнутого прямоугольника: так kit не зависит от набора иконок
-const CheckMark: React.FC<{ color: string }> = ({ color }) => (
+const CheckMark: React.FC = () => (
   <View
     style={{
       width: 5,
       height: 9,
       marginTop: -2,
-      borderRightWidth: 2,
-      borderBottomWidth: 2,
-      borderColor: color,
       transform: [{ rotate: '45deg' }],
     }}
+    className="border-r-2 border-b-2 border-mist-50"
   />
 );
 
-/** Флажок с подписью и пояснением: нажимается вся строка */
+/** Флажок с подписью и пояснением: нажимается вся строка (наборы модов в новой сборке) */
 export const CheckRow: React.FC<CheckRowProps> = ({
   label,
   description,
   checked,
   onChange,
   disabled = false,
+  checkIcon: CheckIcon,
 }) => {
-  const { colors } = useTheme();
   const { hover, handlers } = usePressFeedback({ disabled });
   return (
     <Pressable
@@ -320,34 +283,27 @@ export const CheckRow: React.FC<CheckRowProps> = ({
       style={disabled ? DIMMED : undefined}
     >
       <StateLayers
-        radius={radius.lg}
-        layers={[{ color: colors.hover, progress: hover }]}
+        className="rounded-lg"
+        layers={[
+          { className: 'bg-mist-950/5 dark:bg-mist-50/5', progress: hover },
+        ]}
       />
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          gap: 12,
-          paddingHorizontal: 8,
-          paddingVertical: 8,
-        }}
-      >
+      <View className="flex-row items-start gap-3 px-2 py-2">
         <View
-          style={{
-            marginTop: 2,
-            width: 20,
-            height: 20,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: radius.md,
-            borderWidth: 1,
-            borderColor: checked ? colors.accent : colors.track,
-            backgroundColor: checked ? colors.accent : undefined,
-          }}
+          className={`mt-0.5 w-5 h-5 items-center justify-center rounded-md border ${
+            checked
+              ? 'bg-blue-500 border-blue-500'
+              : 'border-mist-300 dark:border-mist-700'
+          }`}
         >
-          {checked && <CheckMark color={colors.textOnAccent} />}
+          {checked &&
+            (CheckIcon ? (
+              <CheckIcon size={12} className="text-mist-50" />
+            ) : (
+              <CheckMark />
+            ))}
         </View>
-        <View style={{ flex: 1, gap: 2 }}>
+        <View className="flex-1 gap-0.5">
           <Text>{label}</Text>
           {description ? (
             <Text size="xs" tone="muted">

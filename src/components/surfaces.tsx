@@ -1,74 +1,47 @@
 import React from 'react';
-import { View, type StyleProp, type ViewStyle } from 'react-native';
-import { useTheme } from '../theme';
-import { radius, type ColorRole } from '../tokens';
+import { View } from 'react-native';
 import { Text } from './text';
 
 export type SurfaceKind = 'window' | 'page' | 'card' | 'overlay' | 'neutral';
 
-const SURFACE: Record<SurfaceKind, ColorRole> = {
-  window: 'window',
-  page: 'page',
-  card: 'card',
-  overlay: 'overlay',
-  neutral: 'neutral',
-};
-
-const RADIUS: Record<SurfaceKind, number> = {
-  window: 0,
-  page: 0,
-  card: radius.xl,
-  overlay: radius.xl,
-  neutral: radius.lg,
+// Уровни поверхностей (DESIGN.md: «Поверхности»): разделяются цветом и рамкой, не тенью.
+// Классы целиком — иначе Uniwind их не найдёт при сборке
+const SURFACE: Record<SurfaceKind, string> = {
+  window: 'bg-mist-100 dark:bg-mist-900',
+  page: 'bg-mist-50 dark:bg-mist-950',
+  card: 'rounded-xl bg-mist-100 dark:bg-mist-900',
+  overlay:
+    'rounded-xl border border-mist-200 dark:border-mist-800 bg-mist-50 dark:bg-mist-900',
+  neutral: 'rounded-lg bg-mist-200 dark:bg-mist-800',
 };
 
 export interface SurfaceProps {
-  /** Уровень поверхности (DESIGN.md: «Поверхности»). Уровни разделяются цветом и рамкой, не тенью */
+  /** Уровень поверхности: окно, страница, карточка, всплывающее окно или меню */
   kind?: SurfaceKind;
+  /** Дополнительные классы Uniwind: раскладка и отступы */
+  className?: string;
   children?: React.ReactNode;
-  style?: StyleProp<ViewStyle>;
 }
 
-/** Поверхность: окно, страница, карточка на странице, всплывающее окно или меню */
 export const Surface: React.FC<SurfaceProps> = ({
   kind = 'card',
+  className = '',
   children,
-  style,
-}) => {
-  const { colors } = useTheme();
-  return (
-    <View
-      style={[
-        { backgroundColor: colors[SURFACE[kind]], borderRadius: RADIUS[kind] },
-        kind === 'overlay' && {
-          borderWidth: 1,
-          borderColor: colors.overlayBorder,
-        },
-        style,
-      ]}
-    >
-      {children}
-    </View>
-  );
-};
+}) => <View className={`${SURFACE[kind]} ${className}`}>{children}</View>;
 
 /** Разделитель h-px; inset — с отступами по краям, как между строками карточки */
-export const Divider: React.FC<{ inset?: boolean }> = ({ inset = false }) => {
-  const { colors } = useTheme();
-  return (
-    <View
-      style={{
-        height: 1,
-        marginHorizontal: inset ? 16 : 0,
-        backgroundColor: colors.divider,
-      }}
-    />
-  );
-};
+export const Divider: React.FC<{ inset?: boolean }> = ({ inset = false }) => (
+  <View
+    className={`h-px bg-mist-200 dark:bg-mist-800 ${inset ? 'mx-4' : ''}`}
+  />
+);
 
 /** Карточка со строками через разделитель */
-export const Card: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <Surface kind="card">
+export const Card: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+}> = ({ children, className }) => (
+  <Surface kind="card" className={className}>
     {React.Children.toArray(children).map((child, i) => (
       <React.Fragment key={i}>
         {i > 0 && <Divider inset />}
@@ -83,7 +56,7 @@ export const Section: React.FC<{
   title: string;
   children: React.ReactNode;
 }> = ({ title, children }) => (
-  <View style={{ gap: 8 }}>
+  <View className="gap-2">
     <Text size="xs" tone="muted" uppercase>
       {title}
     </Text>
@@ -110,26 +83,10 @@ export const Row: React.FC<RowProps> = ({
   wide = false,
   children,
 }) => (
-  <View
-    style={{
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: 12,
-      padding: 16,
-    }}
-  >
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 12,
-        flexShrink: 1,
-      }}
-    >
+  <View className="flex-row flex-wrap items-center justify-between gap-3 p-4">
+    <View className="flex-row items-center gap-3 flex-shrink">
       {leading}
-      <View style={{ gap: 2, flexShrink: 1 }}>
+      <View className="gap-0.5 flex-shrink">
         <Text>{title}</Text>
         {description ? (
           <Text size="xs" tone="muted">
@@ -138,11 +95,9 @@ export const Row: React.FC<RowProps> = ({
         ) : null}
       </View>
     </View>
+    {/* Элементы управления одной ширины, чтобы их края в карточке совпадали */}
     {children ? (
-      // Одна ширина, чтобы края элементов в карточке совпадали
-      <View style={{ width: wide ? 320 : 224, maxWidth: '100%' }}>
-        {children}
-      </View>
+      <View className={`${wide ? 'w-80' : 'w-56'} max-w-full`}>{children}</View>
     ) : null}
   </View>
 );

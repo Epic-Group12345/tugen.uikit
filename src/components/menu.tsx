@@ -6,10 +6,14 @@ import {
   View,
   type ImageSourcePropType,
 } from 'react-native';
-import { StateLayers, useAnimatedFlag, usePressFeedback } from '../animation';
+import {
+  StateLayers,
+  useAppear,
+  usePressFeedback,
+  useAnimatedFlag,
+} from '../animation';
+import { motion } from '../tokens';
 import { Popup, usePopupToggle } from '../popup';
-import { useTheme } from '../theme';
-import { motion, radius } from '../tokens';
 import { IconButton } from './button';
 import type { IconComponent } from './icon';
 import { Text } from './text';
@@ -27,40 +31,29 @@ export interface MenuItem {
 // Отступ меню от кнопки, DIP
 const MENU_OFFSET = 4;
 
+const GLYPH = { width: 16, height: 16 };
+
+/** Иконка или картинка пункта: 16×16 */
 const Glyph: React.FC<{
   icon?: IconComponent;
   image?: ImageSourcePropType;
-  color: string;
-}> = ({ icon: Icon, image, color }) => {
+  className: string;
+}> = ({ icon: Icon, image, className }) => {
   if (image) {
-    return <Image source={image} style={{ width: 16, height: 16 }} />;
+    return <Image source={image} style={GLYPH} />;
   }
-  return Icon ? <Icon size={16} color={color} /> : null;
+  return Icon ? <Icon size={16} className={className} /> : null;
 };
-
-// Галочка выбранного пункта из повёрнутого уголка: kit не зависит от набора иконок
-const Check: React.FC<{ color: string }> = ({ color }) => (
-  <View
-    style={{
-      width: 5,
-      height: 9,
-      marginHorizontal: 4,
-      marginTop: -2,
-      borderRightWidth: 2,
-      borderBottomWidth: 2,
-      borderColor: color,
-      transform: [{ rotate: '45deg' }],
-    }}
-  />
-);
 
 const Item: React.FC<{ item: MenuItem; onPress: () => void }> = ({
   item,
   onPress,
 }) => {
-  const { colors } = useTheme();
   const { hovered, hover, press, handlers } = usePressFeedback();
-  const content = hovered || item.selected ? colors.text : colors.textSecondary;
+  const content =
+    hovered || item.selected
+      ? 'text-mist-950 dark:text-mist-50'
+      : 'text-mist-600 dark:text-mist-300';
   return (
     <Pressable
       {...handlers}
@@ -69,63 +62,76 @@ const Item: React.FC<{ item: MenuItem; onPress: () => void }> = ({
       onPress={onPress}
     >
       <StateLayers
-        radius={radius.lg}
+        className="rounded-lg"
         layers={[
-          { color: colors.hover, progress: hover },
-          { color: colors.press, progress: press },
+          { className: 'bg-mist-950/5 dark:bg-mist-50/5', progress: hover },
+          { className: 'bg-mist-950/10 dark:bg-mist-50/10', progress: press },
         ]}
       />
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 8,
-          paddingHorizontal: 8,
-          paddingVertical: 6,
-        }}
-      >
-        <Glyph icon={item.icon} image={item.image} color={content} />
-        <Text numberOfLines={1} style={{ flex: 1, color: content }}>
+      <View className="flex-row items-center gap-2 px-2 py-1.5">
+        <Glyph icon={item.icon} image={item.image} className={content} />
+        <Text numberOfLines={1} className={`flex-1 ${content}`}>
           {item.label}
         </Text>
-        {item.selected && <Check color={colors.text} />}
+        {item.selected && <Check />}
       </View>
     </Pressable>
   );
 };
 
-/** Меню: пункты в карточке-всплывашке. Само по себе — для своих Popup; обычно — Dropdown и Select */
+/** Галочка выбранного пункта */
+const Check: React.FC = () => (
+  <View
+    style={{
+      width: 5,
+      height: 9,
+      marginHorizontal: 4,
+      marginTop: -2,
+      transform: [{ rotate: '45deg' }],
+    }}
+    className="border-r-2 border-b-2 border-mist-950 dark:border-mist-50"
+  />
+);
+
+/** Шеврон «вниз» у выпадающего списка */
+const Chevron: React.FC = () => (
+  <View
+    style={{
+      width: 6,
+      height: 6,
+      marginHorizontal: 4,
+      marginTop: -3,
+      transform: [{ rotate: '45deg' }],
+    }}
+    className="border-r border-b border-mist-500 dark:border-mist-400"
+  />
+);
+
+/** Меню: пункты в карточке-всплывашке. Обычно — через Dropdown и Select */
 export const Menu: React.FC<{
   items: readonly MenuItem[];
   minWidth?: number;
   onClose: () => void;
 }> = ({ items, minWidth, onClose }) => {
-  const { colors } = useTheme();
-  const shown = useAnimatedFlag(true);
+  // Только прозрачность: меню может встать и под кнопкой, и над ней — сдвиг вышел бы не в ту сторону
+  const shown = useAppear(motion.appear);
   return (
-    <Animated.View
-      accessibilityRole="menu"
-      style={{
-        opacity: shown,
-        minWidth: Math.max(192, minWidth ?? 0),
-        padding: 4,
-        gap: 2,
-        borderRadius: radius.xl,
-        borderWidth: 1,
-        borderColor: colors.overlayBorder,
-        backgroundColor: colors.overlay,
-      }}
-    >
-      {items.map(item => (
-        <Item
-          key={item.label}
-          item={item}
-          onPress={() => {
-            onClose();
-            item.onPress();
-          }}
-        />
-      ))}
+    <Animated.View accessibilityRole="menu" style={{ opacity: shown }}>
+      <View
+        className="min-w-48 p-1 gap-0.5 rounded-xl border border-mist-200 dark:border-mist-800 bg-mist-50 dark:bg-mist-900"
+        style={minWidth ? { minWidth } : undefined}
+      >
+        {items.map(item => (
+          <Item
+            key={item.label}
+            item={item}
+            onPress={() => {
+              onClose();
+              item.onPress();
+            }}
+          />
+        ))}
+      </View>
     </Animated.View>
   );
 };
@@ -150,7 +156,7 @@ export const useDropdownMenu = ({ matchWidth = false } = {}) => {
   return { anchorRef, isOpen, onPressIn, onPress, menu };
 };
 
-/** Кнопка-иконка с меню под ней */
+/** Кнопка-иконка с выпадающим меню под ней */
 export const Dropdown: React.FC<{
   icon: IconComponent;
   items: readonly MenuItem[];
@@ -158,7 +164,9 @@ export const Dropdown: React.FC<{
 }> = ({ icon, items, accessibilityLabel }) => {
   const { anchorRef, onPressIn, onPress, menu } = useDropdownMenu();
   return (
-    // Обёртка — чтобы измерить положение кнопки; Popup внутри неё места не занимает
+    // Обёртка — чтобы измерить положение кнопки: IconButton ref не пробрасывает.
+    // Popup внутри неё, а не рядом: сам он места не занимает, но в ряду с gap родитель
+    // добавил бы для него отступ, и соседние кнопки сдвинулись бы на время открытия меню
     <View ref={anchorRef} collapsable={false}>
       <IconButton
         icon={icon}
@@ -187,23 +195,10 @@ export interface SelectProps<T extends string> {
   accessibilityLabel?: string;
 }
 
-// Шеврон из повёрнутого уголка
-const Chevron: React.FC<{ color: string }> = ({ color }) => (
-  <View
-    style={{
-      width: 6,
-      height: 6,
-      marginHorizontal: 4,
-      marginTop: -3,
-      borderRightWidth: 1.5,
-      borderBottomWidth: 1.5,
-      borderColor: color,
-      transform: [{ rotate: '45deg' }],
-    }}
-  />
-);
-
-/** Выбор одного варианта из выпадающего списка — там, где Segmented не помещается в ряд */
+/**
+ * Выбор одного варианта из выпадающего списка: кнопка показывает текущий, меню — все.
+ * Для длинных списков, где Segmented не помещается в ряд (язык интерфейса)
+ */
 export const Select = <T extends string>({
   options,
   value,
@@ -211,7 +206,6 @@ export const Select = <T extends string>({
   placeholder,
   accessibilityLabel,
 }: SelectProps<T>) => {
-  const { colors } = useTheme();
   const { anchorRef, isOpen, onPressIn, onPress, menu } = useDropdownMenu({
     matchWidth: true,
   });
@@ -250,37 +244,32 @@ export const Select = <T extends string>({
       >
         <Animated.View style={feedback.pressStyle}>
           <StateLayers
-            radius={radius.lg}
+            className="rounded-lg"
             layers={[
-              { color: colors.neutral },
-              { color: colors.neutralHover, progress: hover },
-              { color: colors.segmentPress, progress: feedback.press },
+              { className: 'bg-mist-200 dark:bg-mist-800' },
+              { className: 'bg-mist-300 dark:bg-mist-700', progress: hover },
+              {
+                className: 'bg-mist-300 dark:bg-mist-600',
+                progress: feedback.press,
+              },
             ]}
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 8,
-              paddingHorizontal: 12,
-              paddingVertical: 6,
-            }}
-          >
+          <View className="flex-row items-center gap-2 px-3 py-1.5">
             {current && (
               <Glyph
                 icon={current.icon}
                 image={current.image}
-                color={colors.text}
+                className="text-mist-950 dark:text-mist-50"
               />
             )}
             <Text
               numberOfLines={1}
               tone={current ? 'default' : 'muted'}
-              style={{ flex: 1 }}
+              className="flex-1"
             >
               {current?.label ?? placeholder}
             </Text>
-            <Chevron color={colors.textMuted} />
+            <Chevron />
           </View>
         </Animated.View>
       </Pressable>

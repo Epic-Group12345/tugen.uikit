@@ -5,26 +5,36 @@ UI-kit TUGEN: визуальный язык лаунчера (`DESIGN.md` в tug
 
 | Где                                              | Что брать                          |
 | ------------------------------------------------ | ---------------------------------- |
-| лаунчер (React Native Windows), мини-приложения игр | компоненты `@tugen/uikit`          |
-| веб на React (react-native-web)                  | те же компоненты `@tugen/uikit`    |
+| лаунчер (React Native Windows), мини-приложения игр | компоненты `@tugen/uikit` + Uniwind |
+| веб на React (react-native-web)                  | те же компоненты и плагин Uniwind для Vite |
 | веб без React — tugen.webservices (Nim + Vite)   | `@tugen/uikit/css` и `nim/tugen_uikit.nim` |
 
-Цвета — палитра Tailwind 4 (`mist`, `blue`, `green`, `red`, `amber`, `violet`) в sRGB и роли поверх неё:
+Цвета — палитра Tailwind 4 (`mist`, `blue`, `green`, `red`, `amber`, `violet`) и роли поверх неё:
 `page`, `card`, `text`, `textMuted`, `accent`, `play`… У каждой роли пара — для светлой и тёмной темы.
+В компонентах роли записаны классами Uniwind, в вебе без React — теми же цветами в переменных `--tg-*`.
 
 ## React Native
 
 ```tsx
-import { Button, Row, Section, ThemeProvider, Toggle } from '@tugen/uikit';
+import { Button, Row, Section, Toggle } from '@tugen/uikit';
 
-<ThemeProvider scheme={theme /* 'light' | 'dark'; без него — тема системы */}>
-  <Section title='Игра'>
-    <Row title='Музыка' description='Фоновая музыка в лаунчере'>
-      <Toggle value={music} onChange={setMusic} accessibilityLabel='Музыка' />
-    </Row>
-  </Section>
-  <Button variant='play' icon={Icons.Play}>Играть</Button>
-</ThemeProvider>;
+<Section title='Игра'>
+  <Row title='Музыка' description='Фоновая музыка в лаунчере'>
+    <Toggle value={music} onChange={setMusic} accessibilityLabel='Музыка' />
+  </Row>
+</Section>;
+<Button variant='play' icon={Icons.Play}>Играть</Button>;
+```
+
+Оформление — классы [Uniwind](https://uniwind.dev) (Tailwind для React Native), как в самом лаунчере:
+цвета, отступы и скругления пишутся классами целиком (`bg-mist-200 dark:bg-mist-800`), тему
+переключает приложение (`Uniwind.setTheme`), а `dark:` в классах следует за ней. Поэтому сборка
+приложения должна видеть исходники kit — в её `global.css` добавьте строку `@source`:
+
+```css
+@source "../../uikit/src/**/*.{ts,tsx}";   /* путь до src пакета @tugen/uikit */
+@import 'tailwindcss';
+@import 'uniwind';
 ```
 
 Элементы: `Text`, `Button`, `IconButton`, `Toggle`, `Slider`, `Segmented`, `CheckRow`, `TextField`, `Pill`,
@@ -36,13 +46,17 @@ import { Button, Row, Section, ThemeProvider, Toggle } from '@tugen/uikit';
 последним; Escape в RNW передайте в `dismissPopup()` из обработчика клавиш корня (в вебе слой ловит его сам).
 Окно не выходит за границы окна приложения: встаёт под якорем, над ним, если снизу нет места, и
 прижимается к краю. Хуки движения —
-`usePressFeedback`, `useAnimatedFlag`, `useFlipOffset`, `StateLayers`. Цвета в своём коде —
-`useTheme().colors.<роль>`, размеры — `radius`, `space`, `text`.
+`usePressFeedback`, `useAnimatedFlag`, `useFlipOffset`, `StateLayers`. Числовые токены там, где классов не хватает (длительности
+анимаций, размеры в `StyleSheet`) — `motion`, `radius`, `space`, `text`, `breakpoints`.
 
-Иконки kit не навязывает: `icon` — любой компонент с `size` и `color` (`Icons.*` лаунчера, `@gravity-ui/icons`).
-Kit не зависит от Uniwind и нативных модулей лаунчера — стили обычные (`StyleSheet`), поэтому он работает
-и в мини-приложениях, и в браузере через react-native-web. Анимации — только opacity и transform, на
-нативном драйвере (в вебе — без него).
+Иконки kit не навязывает: `icon` — любой компонент с `size` и `className`, то есть `Icons.<Имя>` лаунчера.
+Цвет иконки задаёт класс `text-*`, который передаёт сам элемент, поэтому он совпадает с цветом соседнего
+текста. Нативных модулей лаунчера kit не требует. Анимации — только opacity и transform, на нативном
+драйвере (в вебе — без него); цвета не анимируются, их меняют слои `StateLayers`.
+
+В браузере на React те же компоненты работают через react-native-web с
+[плагином Uniwind для Vite](https://uniwind.dev): он подменяет `react-native` своими обёртками, которые
+понимают `className`.
 
 ## Веб без React
 

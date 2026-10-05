@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { TextInput, View } from 'react-native';
-import { useTheme } from '../theme';
-import { radius, text } from '../tokens';
 import type { IconComponent } from './icon';
-import { MONO_FONT } from './text';
+
+const MONO = { fontFamily: 'Consolas' };
 
 export interface TextFieldProps {
   value: string;
@@ -43,34 +42,24 @@ export const TextField: React.FC<TextFieldProps> = ({
   onBlur,
   accessibilityLabel,
 }) => {
-  const { colors } = useTheme();
   const [focused, setFocused] = useState(false);
+  // Классы целиком — иначе Uniwind их не найдёт при сборке
   const border = invalid
-    ? colors.invalid
+    ? 'border-red-500'
     : focused
-    ? colors.focus
-    : colors.fieldBorder;
+    ? 'border-blue-500'
+    : 'border-mist-200 dark:border-mist-800';
   return (
     <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-        paddingHorizontal: 12,
-        borderRadius: radius.lg,
-        borderWidth: 1,
-        borderColor: border,
-        backgroundColor: colors.field,
-      }}
+      className={`flex-row items-center gap-2 px-3 rounded-lg border bg-mist-100 dark:bg-mist-900 ${border}`}
     >
-      {Icon && <Icon size={14} color={colors.textMuted} />}
+      {Icon && <Icon size={14} className="text-mist-500 dark:text-mist-400" />}
       <TextInput
         value={value}
         onChangeText={next =>
           onChangeText(numeric ? next.replace(/\D/g, '') : next)
         }
         placeholder={placeholder}
-        placeholderTextColor={colors.placeholder}
         autoFocus={autoFocus}
         maxLength={maxLength}
         secureTextEntry={secure}
@@ -82,11 +71,9 @@ export const TextField: React.FC<TextFieldProps> = ({
           onBlur?.();
         }}
         onSubmitEditing={onSubmit}
-        style={[
-          text.sm,
-          { flex: 1, paddingVertical: 8, color: colors.text },
-          mono && { fontFamily: MONO_FONT },
-        ]}
+        style={mono ? MONO : undefined}
+        className="flex-1 py-2 text-sm text-mist-950 dark:text-mist-50"
+        placeholderTextColorClassName="accent-mist-400 dark:accent-mist-500"
       />
     </View>
   );

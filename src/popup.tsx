@@ -159,7 +159,8 @@ const PopupLayer: React.FC<{ entry: PopupEntry; host: Size }> = ({
       />
       <View
         onLayout={onLayout}
-        style={{ position: 'absolute', ...place, opacity: size ? 1 : 0 }}
+        className="absolute"
+        style={{ ...place, opacity: size ? 1 : 0 }}
       >
         {entry.children}
       </View>

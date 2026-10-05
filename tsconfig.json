@@ -9,7 +9,14 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "types": ["jest", "node"]
+    "types": [
+      "jest",
+      "node"
+    ]
   },
-  "include": ["src", "__tests__"]
+  "include": [
+    "src",
+    "__tests__",
+    "uniwind-env.d.ts"
+  ]
 }

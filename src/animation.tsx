@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Animated, Easing, Platform, StyleSheet } from 'react-native';
+import { Animated, Easing, Platform, StyleSheet, View } from 'react-native';
 import { motion } from './tokens';
 
 // Анимации kit — только opacity и transform на нативном драйвере: в RNW они идут в Windows
@@ -46,6 +46,13 @@ export const useAnimatedFlag = (
   }, [on, value, durationIn, durationOut]);
 
   return value;
+};
+
+/** Плавное появление при монтировании: для меню, окон и уведомлений */
+export const useAppear = (duration = motion.appear) => {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => setVisible(true), []);
+  return useAnimatedFlag(visible, { in: duration });
 };
 
 /**
@@ -109,7 +116,8 @@ export const useFlipOffset = (position: number, duration = motion.layout) => {
 };
 
 /**
- * Наведение и нажатие для Pressable: handlers — в Pressable, hover / press — плавные флаги для
+ * Наведение и нажатие для Pressable: hover: в Uniwind нет, а active: не анимируется, поэтому
+ * состояния — вручную. handlers раздаём в Pressable, hover / press — плавные флаги для
  * StateLayers, pressStyle — лёгкое «вдавливание» (scale), одно на компонент
  */
 export const usePressFeedback = ({ disabled = false, scale = 0.97 } = {}) => {
@@ -155,20 +163,21 @@ export const usePressFeedback = ({ disabled = false, scale = 0.97 } = {}) => {
 };
 
 export interface StateLayer {
-  /** Цвет слоя */
-  color: string;
+  /** Классы Uniwind слоя, например "bg-mist-200 dark:bg-mist-800" */
+  className: string;
   /** Прозрачность слоя (0..1); без неё слой виден всегда — это базовый фон */
   progress?: Animated.Value | Animated.AnimatedInterpolation<number>;
 }
 
 /**
- * Фон из слоёв-состояний: каждый слой залит своим цветом, а плавно меняется только его
- * прозрачность. Последний слой — сверху. Родитель задаёт размер (слои — absolute)
+ * Фон из слоёв-состояний: каждый слой залит своим цветом из классов, а плавно меняется только
+ * его прозрачность. Так цвета остаются в Uniwind (включая dark:), а переходы анимируются.
+ * Слои лежат по порядку: последний — сверху. Родитель задаёт размер (слои — absolute)
  */
 export const StateLayers: React.FC<{
   layers: StateLayer[];
-  radius?: number;
-}> = ({ layers, radius = 0 }) => (
+  className?: string;
+}> = ({ layers, className = '' }) => (
   <>
     {layers.map((layer, i) => (
       <Animated.View
@@ -176,10 +185,12 @@ export const StateLayers: React.FC<{
         pointerEvents="none"
         style={[
           StyleSheet.absoluteFill,
-          { backgroundColor: layer.color, borderRadius: radius },
           layer.progress !== undefined && { opacity: layer.progress },
         ]}
-      />
+      >
+        {/* Классы — на обычном View: Animated.View из react-native Uniwind не оборачивает */}
+        <View className={`flex-1 ${className} ${layer.className}`} />
+      </Animated.View>
     ))}
   </>
 );

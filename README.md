@@ -28,7 +28,14 @@ import { Button, Row, Section, ThemeProvider, Toggle } from '@tugen/uikit';
 ```
 
 Элементы: `Text`, `Button`, `IconButton`, `Toggle`, `Slider`, `Segmented`, `CheckRow`, `TextField`, `Pill`,
-`Surface`, `Card`, `Section`, `Row`, `Divider`, `EmptyState`, `Skeleton`, `SkeletonLines`. Хуки движения —
+`Surface`, `Card`, `Section`, `Row`, `Divider`, `EmptyState`, `Skeleton`, `SkeletonLines`, `Menu`, `Dropdown`,
+`Select`.
+
+Всплывающие окна (`Popup`, меню, `Select`) — виртуальные: рисуются самим React Native поверх окна приложения,
+без нативного окна-попапа (он в RNW оказался нестабильным). Для них в корне приложения нужен `<PopupHost />`,
+последним; Escape в RNW передайте в `dismissPopup()` из обработчика клавиш корня (в вебе слой ловит его сам).
+Окно не выходит за границы окна приложения: встаёт под якорем, над ним, если снизу нет места, и
+прижимается к краю. Хуки движения —
 `usePressFeedback`, `useAnimatedFlag`, `useFlipOffset`, `StateLayers`. Цвета в своём коде —
 `useTheme().colors.<роль>`, размеры — `radius`, `space`, `text`.
 

@@ -643,6 +643,47 @@
   background: var(--tg-slider-fill);
 }
 
+/* Меню и выпадающий список: <div class="tg-menu" role="menu"><button class="tg-menu__item" role="menuitem"> */
+.tg-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 192px;
+  padding: 4px;
+  border: 1px solid var(--tg-overlay-border);
+  border-radius: var(--tg-radius-xl);
+  background: var(--tg-overlay);
+  animation: tg-appear var(--tg-appear) ease-out;
+}
+.tg-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: var(--tg-radius-lg);
+  background: transparent;
+  color: var(--tg-text-secondary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.tg-menu__item:hover,
+.tg-menu__item[aria-checked='true'] {
+  color: var(--tg-text);
+}
+.tg-menu__item:hover {
+  background: var(--tg-hover);
+}
+.tg-menu__item:active {
+  background: var(--tg-press);
+}
+@keyframes tg-appear {
+  from {
+    opacity: 0;
+  }
+}
+
 /* Метки */
 .tg-pill {
   display: inline-flex;

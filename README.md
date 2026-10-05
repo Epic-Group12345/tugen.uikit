@@ -64,8 +64,8 @@ document.getElementById("app").add section("Игра",
 
 ## Подключение
 
-Репозиторий приватный, поэтому пакет подключается сабмодулем: в лаунчере — `uikit/` и
-`"@tugen/uikit": "link:./uikit"` в package.json. Так CI берёт его тем же токеном, что и ядро.
+В лаунчере — сабмодулем `uikit/` и `"@tugen/uikit": "link:./uikit"` в package.json; в остальных
+репозиториях — пакетом с закреплённым коммитом: `"@tugen/uikit": "github:Epic-Group12345/tugen.uikit#<коммит>"`.
 
 ## Работа
 

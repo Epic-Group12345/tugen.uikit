@@ -167,6 +167,21 @@ const PopupLayer: React.FC<{ entry: PopupEntry; host: Size }> = ({
   );
 };
 
+interface WebKeyEvent {
+  key: string;
+  preventDefault: () => void;
+}
+interface WebDocument {
+  addEventListener: (
+    type: 'keydown',
+    listener: (e: WebKeyEvent) => void,
+  ) => void;
+  removeEventListener: (
+    type: 'keydown',
+    listener: (e: WebKeyEvent) => void,
+  ) => void;
+}
+
 // В вебе measureInWindow считает от окна браузера, а не от страницы: слой не должен уезжать с прокруткой
 const WEB_FIXED =
   Platform.OS === 'web'
@@ -180,16 +195,18 @@ export const PopupHost: React.FC = () => {
   const hostRef = useRef(host);
 
   useEffect(() => {
-    if (Platform.OS !== 'web' || typeof document === 'undefined') {
+    // В вебе Escape слушаем на документе сам. Типы DOM kit не подключает: в RN их нет
+    const doc = (globalThis as { document?: WebDocument }).document;
+    if (Platform.OS !== 'web' || !doc) {
       return;
     }
-    const onKey = (e: KeyboardEvent) => {
+    const onKey = (e: WebKeyEvent) => {
       if (e.key === 'Escape' && dismissPopup()) {
         e.preventDefault();
       }
     };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    doc.addEventListener('keydown', onKey);
+    return () => doc.removeEventListener('keydown', onKey);
   }, []);
 
   const onLayout = (e: LayoutChangeEvent) => {

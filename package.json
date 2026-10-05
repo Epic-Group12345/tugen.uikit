@@ -20,7 +20,7 @@
   },
   "scripts": {
     "css": "node scripts/build-css.mjs",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.src.json",
     "test": "jest"
   },
   "peerDependencies": {

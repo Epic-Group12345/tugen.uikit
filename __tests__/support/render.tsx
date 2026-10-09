@@ -51,9 +51,18 @@ export const press = (el: Element | null) => {
   act(() => (el as HTMLElement).click());
 };
 
-/** Классы всех элементов поддерева одной строкой — для проверки оформления */
+/**
+ * Классы Uniwind всех элементов поддерева одной строкой — для проверки оформления. В тестах
+ * className попадает в data-class (см. support/react-native.js)
+ */
 export const classesOf = (el: Element) =>
-  [el, ...el.querySelectorAll('*')].map(e => e.className).join(' ');
+  [el, ...el.querySelectorAll('[data-class]')]
+    .map(e => e.getAttribute('data-class') ?? '')
+    .join(' ');
+
+/** Классы одного элемента */
+export const classOf = (el: Element | null) =>
+  el?.getAttribute('data-class') ?? '';
 
 /** Иконка для тестов: показывает, с каким размером и классами её нарисовали */
 export const Dot: React.FC<{ size?: number; className?: string }> = ({

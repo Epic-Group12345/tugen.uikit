@@ -67,6 +67,8 @@ export {
   type RowProps,
   type SurfaceKind,
   type SurfaceProps,
+  type DividerProps,
+  type DividerOrientation,
 } from './components/surfaces';
 export { EmptyState, type EmptyStateProps } from './components/empty-state';
 export {

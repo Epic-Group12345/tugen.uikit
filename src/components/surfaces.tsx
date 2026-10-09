@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, type StyleProp, type ViewStyle } from 'react-native';
+import * as SeparatorPrimitive from '@rn-primitives/separator';
 import {
   PADDING_CLASS,
   RadiusScope,
@@ -86,11 +87,50 @@ export const Surface: React.FC<SurfaceProps> = ({
   );
 };
 
-/** Разделитель h-px; inset — с отступами по краям, как между строками карточки */
-export const Divider: React.FC<{ inset?: boolean }> = ({ inset = false }) => (
-  <View
-    className={`h-px bg-mist-200 dark:bg-mist-800 ${inset ? 'mx-4' : ''}`}
-  />
+export type DividerOrientation = 'horizontal' | 'vertical';
+
+export interface DividerProps {
+  /** horizontal — линия h-px между строками; vertical — w-px между элементами ряда */
+  orientation?: DividerOrientation;
+  /** С отступами по краям, как между строками карточки */
+  inset?: boolean;
+  /**
+   * Только оформление (по умолчанию): диктор его пропускает. false — смысловой разделитель
+   * с ролью separator
+   */
+  decorative?: boolean;
+  className?: string;
+}
+
+// Классы целиком — иначе Uniwind их не найдёт при сборке
+const DIVIDER: Record<DividerOrientation, string> = {
+  horizontal: 'h-px self-stretch',
+  vertical: 'w-px self-stretch',
+};
+
+const DIVIDER_INSET: Record<DividerOrientation, string> = {
+  horizontal: 'mx-4',
+  vertical: 'my-1',
+};
+
+/** Разделитель на @rn-primitives/separator: роль и aria-orientation — из примитива */
+export const Divider: React.FC<DividerProps> = ({
+  orientation = 'horizontal',
+  inset = false,
+  decorative = true,
+  className = '',
+}) => (
+  <SeparatorPrimitive.Root
+    orientation={orientation}
+    decorative={decorative}
+    asChild
+  >
+    <View
+      className={`${DIVIDER[orientation]} bg-mist-200 dark:bg-mist-800 ${
+        inset ? DIVIDER_INSET[orientation] : ''
+      } ${className}`}
+    />
+  </SeparatorPrimitive.Root>
 );
 
 /** Карточка со строками через разделитель */

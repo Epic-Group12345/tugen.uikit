@@ -1,22 +1,33 @@
 import React, { useMemo } from 'react';
 import {
   Animated,
-  Image,
   Pressable,
   View,
   type ImageSourcePropType,
 } from 'react-native';
-import {
-  StateLayers,
-  useAppear,
-  usePressFeedback,
-  useAnimatedFlag,
-} from '../animation';
+import { StateLayers, useAppear, usePressFeedback } from '../animation';
 import { motion } from '../tokens';
 import { Popup, usePopupToggle } from '../popup';
-import { IconButton } from './button';
+import { radiusProps, useInnerRadius } from '../radius';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './dropdown-menu';
 import type { IconComponent } from './icon';
-import { Text } from './text';
+import { MenuRow, MenuSurface, useMenuItemState } from './menu-parts';
+import {
+  SelectContent,
+  SelectItem,
+  SelectRoot,
+  SelectTrigger,
+  SelectValue,
+} from './select';
+
+// Простые меню одной строкой: Dropdown (кнопка-иконка с меню) и Select (выбор из options) — на
+// составных DropdownMenu и SelectRoot. Menu и useDropdownMenu — прежние, на Popup: ими пользуется
+// лаунчер; оформление у них общее с остальными меню (menu-parts)
 
 export interface MenuItem {
   label: string;
@@ -25,89 +36,44 @@ export interface MenuItem {
   image?: ImageSourcePropType;
   /** Выбранный пункт — с галочкой справа */
   selected?: boolean;
+  /** Необратимое действие: красный текст */
+  destructive?: boolean;
+  disabled?: boolean;
   onPress: () => void;
 }
 
 // Отступ меню от кнопки, DIP
 const MENU_OFFSET = 4;
 
-const GLYPH = { width: 16, height: 16 };
-
-/** Иконка или картинка пункта: 16×16 */
-const Glyph: React.FC<{
-  icon?: IconComponent;
-  image?: ImageSourcePropType;
-  className: string;
-}> = ({ icon: Icon, image, className }) => {
-  if (image) {
-    return <Image source={image} style={GLYPH} />;
-  }
-  return Icon ? <Icon size={16} className={className} /> : null;
-};
-
-const Item: React.FC<{ item: MenuItem; onPress: () => void }> = ({
+const LegacyItem: React.FC<{ item: MenuItem; onPress: () => void }> = ({
   item,
   onPress,
 }) => {
-  const { hovered, hover, press, handlers } = usePressFeedback();
-  const content =
-    hovered || item.selected
-      ? 'text-mist-950 dark:text-mist-50'
-      : 'text-mist-600 dark:text-mist-300';
+  const state = useMenuItemState(item.disabled);
   return (
     <Pressable
-      {...handlers}
+      {...state.handlers}
       accessibilityRole="menuitem"
       aria-checked={item.selected}
+      aria-disabled={item.disabled}
+      disabled={item.disabled}
       onPress={onPress}
     >
-      <StateLayers
-        className="rounded-lg"
-        layers={[
-          { className: 'bg-mist-950/5 dark:bg-mist-50/5', progress: hover },
-          { className: 'bg-mist-950/10 dark:bg-mist-50/10', progress: press },
-        ]}
-      />
-      <View className="flex-row items-center gap-2 px-2 py-1.5">
-        <Glyph icon={item.icon} image={item.image} className={content} />
-        <Text numberOfLines={1} className={`flex-1 ${content}`}>
-          {item.label}
-        </Text>
-        {item.selected && <Check />}
-      </View>
+      <MenuRow
+        icon={item.icon}
+        image={item.image}
+        checked={item.selected}
+        destructive={item.destructive}
+        disabled={item.disabled}
+        state={state}
+      >
+        {item.label}
+      </MenuRow>
     </Pressable>
   );
 };
 
-/** Галочка выбранного пункта */
-const Check: React.FC = () => (
-  <View
-    style={{
-      width: 5,
-      height: 9,
-      marginHorizontal: 4,
-      marginTop: -2,
-      transform: [{ rotate: '45deg' }],
-    }}
-    className="border-r-2 border-b-2 border-mist-950 dark:border-mist-50"
-  />
-);
-
-/** Шеврон «вниз» у выпадающего списка */
-const Chevron: React.FC = () => (
-  <View
-    style={{
-      width: 6,
-      height: 6,
-      marginHorizontal: 4,
-      marginTop: -3,
-      transform: [{ rotate: '45deg' }],
-    }}
-    className="border-r border-b border-mist-500 dark:border-mist-400"
-  />
-);
-
-/** Меню: пункты в карточке-всплывашке. Обычно — через Dropdown и Select */
+/** Меню на Popup: пункты в карточке-всплывашке. Новое лучше строить на DropdownMenu */
 export const Menu: React.FC<{
   items: readonly MenuItem[];
   minWidth?: number;
@@ -117,12 +83,9 @@ export const Menu: React.FC<{
   const shown = useAppear(motion.appear);
   return (
     <Animated.View accessibilityRole="menu" style={{ opacity: shown }}>
-      <View
-        className="min-w-48 p-1 gap-0.5 rounded-xl border border-mist-200 dark:border-mist-800 bg-mist-50 dark:bg-mist-900"
-        style={minWidth ? { minWidth } : undefined}
-      >
+      <MenuSurface style={minWidth ? { minWidth } : undefined}>
         {items.map(item => (
-          <Item
+          <LegacyItem
             key={item.label}
             item={item}
             onPress={() => {
@@ -131,14 +94,14 @@ export const Menu: React.FC<{
             }}
           />
         ))}
-      </View>
+      </MenuSurface>
     </Animated.View>
   );
 };
 
 /**
- * Меню под кнопкой: оберните кнопку в <View ref={anchorRef} collapsable={false}>, передайте ей
- * onPressIn / onPress, а рядом отрисуйте menu(items). matchWidth — меню не уже кнопки
+ * Меню под кнопкой на Popup: оберните кнопку в <View ref={anchorRef} collapsable={false}>,
+ * передайте ей onPressIn / onPress, а рядом отрисуйте menu(items). matchWidth — меню не уже кнопки
  */
 export const useDropdownMenu = ({ matchWidth = false } = {}) => {
   const { anchorRef, anchor, isOpen, onPressIn, onPress, close, onDismiss } =
@@ -156,26 +119,79 @@ export const useDropdownMenu = ({ matchWidth = false } = {}) => {
   return { anchorRef, isOpen, onPressIn, onPress, menu };
 };
 
+/**
+ * Вид кнопки-иконки, как у IconButton. Свой, а не IconButton через asChild: кнопке меню нужен ref
+ * для measure, а IconButton его не пробрасывает
+ */
+const IconTriggerFace: React.FC<{
+  icon: IconComponent;
+  state: ReturnType<typeof usePressFeedback>;
+}> = ({ icon: Icon, state }) => {
+  const rounded = radiusProps(useInnerRadius('lg'));
+  const style = useMemo(
+    () => ({
+      transform: [
+        {
+          scale: state.press.interpolate({
+            inputRange: [0, 1],
+            outputRange: [1, 0.9],
+          }),
+        },
+      ],
+    }),
+    [state.press],
+  );
+  return (
+    <Animated.View style={style}>
+      <StateLayers
+        className={rounded.className}
+        style={rounded.style}
+        layers={[
+          {
+            className: 'bg-mist-950/5 dark:bg-mist-50/5',
+            progress: state.hover,
+          },
+          {
+            className: 'bg-mist-950/10 dark:bg-mist-50/10',
+            progress: state.press,
+          },
+        ]}
+      />
+      <View className="p-1.5">
+        <Icon size={16} className="text-mist-500 dark:text-mist-400" />
+      </View>
+    </Animated.View>
+  );
+};
+
 /** Кнопка-иконка с выпадающим меню под ней */
 export const Dropdown: React.FC<{
   icon: IconComponent;
   items: readonly MenuItem[];
   accessibilityLabel?: string;
 }> = ({ icon, items, accessibilityLabel }) => {
-  const { anchorRef, onPressIn, onPress, menu } = useDropdownMenu();
+  const state = usePressFeedback();
   return (
-    // Обёртка — чтобы измерить положение кнопки: IconButton ref не пробрасывает.
-    // Popup внутри неё, а не рядом: сам он места не занимает, но в ряду с gap родитель
-    // добавил бы для него отступ, и соседние кнопки сдвинулись бы на время открытия меню
-    <View ref={anchorRef} collapsable={false}>
-      <IconButton
-        icon={icon}
-        onPressIn={onPressIn}
-        onPress={onPress}
-        accessibilityLabel={accessibilityLabel}
-      />
-      {menu(items)}
-    </View>
+    <DropdownMenu>
+      <DropdownMenuTrigger {...state.handlers} aria-label={accessibilityLabel}>
+        <IconTriggerFace icon={icon} state={state} />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {items.map(item => (
+          <DropdownMenuItem
+            key={item.label}
+            icon={item.icon}
+            image={item.image}
+            selected={item.selected}
+            destructive={item.destructive}
+            disabled={item.disabled}
+            onSelect={item.onPress}
+          >
+            {item.label}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
@@ -197,7 +213,8 @@ export interface SelectProps<T extends string> {
 
 /**
  * Выбор одного варианта из выпадающего списка: кнопка показывает текущий, меню — все.
- * Для длинных списков, где Segmented не помещается в ряд (язык интерфейса)
+ * Для длинных списков, где Segmented не помещается в ряд (язык интерфейса). Составной вариант
+ * для своих раскладок — SelectRoot, SelectTrigger, SelectContent, SelectItem
  */
 export const Select = <T extends string>({
   options,
@@ -206,74 +223,40 @@ export const Select = <T extends string>({
   placeholder,
   accessibilityLabel,
 }: SelectProps<T>) => {
-  const { anchorRef, isOpen, onPressIn, onPress, menu } = useDropdownMenu({
-    matchWidth: true,
-  });
-  const feedback = usePressFeedback({ scale: 0.98 });
-  const hover = useAnimatedFlag(feedback.hovered || isOpen, {
-    in: motion.hoverIn,
-    out: motion.hoverOut,
-  });
+  // Без placeholder кнопка не бывает пустой: показывает первый вариант, как прежде
   const current =
     options.find(option => option.value === value) ??
     (placeholder === undefined ? options[0] : undefined);
-  const items = useMemo(
-    () =>
-      options.map(option => ({
-        label: option.label,
-        icon: option.icon,
-        image: option.image,
-        selected: option.value === value,
-        onPress: () => onChange(option.value),
-      })),
-    [options, value, onChange],
-  );
-
+  const selected = current
+    ? { value: current.value, label: current.label }
+    : undefined;
   return (
-    <View ref={anchorRef} collapsable={false}>
-      <Pressable
-        {...feedback.handlers}
-        accessibilityRole="combobox"
-        accessibilityLabel={accessibilityLabel}
-        aria-expanded={isOpen}
-        onPress={onPress}
-        onPressIn={() => {
-          feedback.handlers.onPressIn();
-          onPressIn();
-        }}
-      >
-        <Animated.View style={feedback.pressStyle}>
-          <StateLayers
-            className="rounded-lg"
-            layers={[
-              { className: 'bg-mist-200 dark:bg-mist-800' },
-              { className: 'bg-mist-300 dark:bg-mist-700', progress: hover },
-              {
-                className: 'bg-mist-300 dark:bg-mist-600',
-                progress: feedback.press,
-              },
-            ]}
+    <SelectRoot
+      value={selected}
+      onValueChange={option => {
+        if (option) {
+          onChange(option.value as T);
+        }
+      }}
+    >
+      <SelectTrigger accessibilityLabel={accessibilityLabel}>
+        <SelectValue
+          placeholder={placeholder ?? ''}
+          icon={current?.icon}
+          image={current?.image}
+        />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map(option => (
+          <SelectItem
+            key={option.value}
+            value={option.value}
+            label={option.label}
+            icon={option.icon}
+            image={option.image}
           />
-          <View className="flex-row items-center gap-2 px-3 py-1.5">
-            {current && (
-              <Glyph
-                icon={current.icon}
-                image={current.image}
-                className="text-mist-950 dark:text-mist-50"
-              />
-            )}
-            <Text
-              numberOfLines={1}
-              tone={current ? 'default' : 'muted'}
-              className="flex-1"
-            >
-              {current?.label ?? placeholder}
-            </Text>
-            <Chevron />
-          </View>
-        </Animated.View>
-      </Pressable>
-      {menu(items)}
-    </View>
+        ))}
+      </SelectContent>
+    </SelectRoot>
   );
 };

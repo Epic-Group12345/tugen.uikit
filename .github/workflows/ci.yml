@@ -41,3 +41,4 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - run: nim js --hints:off --warningAsError:CStringConv:on --path:nim -o:example/settings.js example/settings.nim
+      - run: nim js --hints:off --warningAsError:CStringConv:on --path:nim -o:example/gallery.js example/gallery.nim

@@ -1,91 +1,46 @@
-import React, { useMemo, useRef, useState } from 'react';
-import {
-  Animated,
-  Pressable,
-  View,
-  type GestureResponderEvent,
-} from 'react-native';
-import {
-  StateLayers,
-  useAnimatedFlag,
-  useFlipOffset,
-  usePressFeedback,
-} from '../animation';
-import { motion } from '../tokens';
+import React, { useRef, useState } from 'react';
+import { View, type GestureResponderEvent } from 'react-native';
+import { Checkbox } from './checkbox';
 import type { IconComponent } from './icon';
 import { Text } from './text';
+import {
+  Switch,
+  ToggleGroup,
+  ToggleGroupItem,
+  type ToggleGroupShape,
+} from './toggle-group';
 
-const DIMMED = { opacity: motion.dimmed };
+// Простые элементы настроек одной строкой: Toggle, Segmented, CheckRow — обёртки над
+// компонентами на @rn-primitives (Switch, ToggleGroup, Checkbox) с API лаунчера (value / onChange)
 
-// Переключатель «вкл / выкл»: дорожка с бегунком, включённый — синий. Бегунок стоит на месте
-// раскладкой (отступом), а едет FLIP-сдвигом, который в покое 0: сдвиг из флага (0…1) держал бы
-// в props JS-копию стартового значения, а RNW складывает её с нативной (см. lib/animation).
-// Цвет дорожки — слоями прозрачности, а не сменой класса: иначе он прыгал бы раньше бегунка
-
-const TRACK = { width: 36, height: 20 };
-const KNOB = 16;
-const PAD = 2;
-const TRAVEL = TRACK.width - KNOB - PAD * 2;
+// Switch определён рядом с ToggleGroup (там же примитивы toggle и switch); здесь — синоним
+export { Switch, type SwitchProps } from './toggle-group';
 
 export interface ToggleProps {
   value: boolean;
   onChange: (value: boolean) => void;
   disabled?: boolean;
   accessibilityLabel?: string;
+  /** Для подписи Label htmlFor и Field; внутри Field ставится сам */
+  nativeID?: string;
 }
 
+/** Переключатель «вкл / выкл» с API лаунчера: Switch с value / onChange */
 export const Toggle: React.FC<ToggleProps> = ({
   value,
   onChange,
-  disabled = false,
+  disabled,
   accessibilityLabel,
-}) => {
-  const { hover, pressStyle, handlers } = usePressFeedback({
-    disabled,
-    scale: 0.94,
-  });
-  const on = useAnimatedFlag(value, { in: motion.toggle });
-  const shift = useFlipOffset(value ? TRAVEL : 0, motion.toggle);
-  const knob = useMemo(
-    () => ({
-      marginLeft: value ? TRAVEL : 0,
-      transform: [{ translateX: shift }],
-    }),
-    [value, shift],
-  );
-  return (
-    <Pressable
-      {...handlers}
-      accessibilityRole="switch"
-      accessibilityLabel={accessibilityLabel}
-      aria-checked={value}
-      aria-disabled={disabled}
-      disabled={disabled}
-      onPress={() => onChange(!value)}
-      style={disabled ? DIMMED : undefined}
-    >
-      <Animated.View
-        style={[TRACK, pressStyle]}
-        className="rounded-full p-0.5 overflow-hidden"
-      >
-        <StateLayers
-          className="rounded-full"
-          layers={[
-            { className: 'bg-mist-300 dark:bg-mist-700' },
-            { className: 'bg-blue-500', progress: on },
-            { className: 'bg-mist-950/10 dark:bg-mist-50/10', progress: hover },
-          ]}
-        />
-        <Animated.View
-          pointerEvents="none"
-          style={[{ width: KNOB, height: KNOB }, knob]}
-        >
-          <View className="flex-1 rounded-full bg-mist-50" />
-        </Animated.View>
-      </Animated.View>
-    </Pressable>
-  );
-};
+  nativeID,
+}) => (
+  <Switch
+    checked={value}
+    onCheckedChange={onChange}
+    disabled={disabled}
+    accessibilityLabel={accessibilityLabel}
+    nativeID={nativeID}
+  />
+);
 
 export interface SliderProps {
   value: number;
@@ -170,73 +125,48 @@ export interface SegmentedProps<T extends string> {
   options: readonly SegmentOption<T>[];
   value: T;
   onChange: (value: T) => void;
+  /** Форма: pill (по умолчанию) — капсула, rounded — дорожка rounded-lg и сегменты rounded-md */
+  shape?: ToggleGroupShape;
+  disabled?: boolean;
+  accessibilityLabel?: string;
 }
 
-const Segment: React.FC<{
-  label: string;
-  icon?: IconComponent;
-  isActive: boolean;
-  onPress: () => void;
-}> = ({ label, icon: Icon, isActive, onPress }) => {
-  const { hovered, hover, press, pressStyle, handlers } = usePressFeedback();
-  const active = useAnimatedFlag(isActive, {
-    in: motion.layout,
-    out: motion.deselect,
-  });
-  // Иконка и подпись одного цвета: яркие у выбранного варианта и при наведении
-  const content =
-    isActive || hovered
-      ? 'text-mist-950 dark:text-mist-50'
-      : 'text-mist-500 dark:text-mist-400';
-
-  return (
-    <Pressable
-      {...handlers}
-      accessibilityRole="radio"
-      aria-checked={isActive}
-      onPress={onPress}
-      className="flex-1"
-    >
-      <Animated.View style={pressStyle}>
-        <StateLayers
-          className="rounded-full"
-          layers={[
-            { className: 'bg-mist-300 dark:bg-mist-700', progress: hover },
-            { className: 'bg-mist-50 dark:bg-mist-700', progress: active },
-            { className: 'bg-mist-300 dark:bg-mist-600', progress: press },
-          ]}
-        />
-        <View className="flex-row items-center justify-center gap-1.5 px-3 py-1.5">
-          {Icon && <Icon size={14} className={content} />}
-          <Text numberOfLines={1} className={content}>
-            {label}
-          </Text>
-        </View>
-      </Animated.View>
-    </Pressable>
-  );
-};
-
-/** Выбор одного варианта из нескольких кнопками в ряд (переключатель темы в настройках) */
+/**
+ * Выбор одного варианта из нескольких кнопками в ряд (переключатель темы в настройках):
+ * ToggleGroup type="single" с сегментами равной ширины. Выбор не снимается повторным нажатием
+ */
 export const Segmented = <T extends string>({
   options,
   value,
   onChange,
+  shape = 'pill',
+  disabled,
+  accessibilityLabel,
 }: SegmentedProps<T>) => (
-  <View
-    accessibilityRole="radiogroup"
-    className="flex-row gap-0.5 p-0.5 rounded-full bg-mist-200 dark:bg-mist-800"
+  <ToggleGroup
+    type="single"
+    value={value}
+    onValueChange={next => {
+      // Примитив снимает выбор повторным нажатием (undefined) — у Segmented вариант есть всегда
+      if (next !== undefined && next !== value) {
+        onChange(next as T);
+      }
+    }}
+    shape={shape}
+    disabled={disabled}
+    accessibilityLabel={accessibilityLabel}
   >
     {options.map(option => (
-      <Segment
+      <ToggleGroupItem
         key={option.value}
-        label={option.label}
+        value={option.value}
         icon={option.icon}
-        isActive={option.value === value}
-        onPress={() => onChange(option.value)}
-      />
+        grow
+      >
+        {option.label}
+      </ToggleGroupItem>
     ))}
-  </View>
+  </ToggleGroup>
 );
 
 export interface CheckRowProps {
@@ -249,69 +179,26 @@ export interface CheckRowProps {
   checkIcon?: IconComponent;
 }
 
-// Галочка из двух сторон повёрнутого прямоугольника: так kit не зависит от набора иконок
-const CheckMark: React.FC = () => (
-  <View
-    style={{
-      width: 5,
-      height: 9,
-      marginTop: -2,
-      transform: [{ rotate: '45deg' }],
-    }}
-    className="border-r-2 border-b-2 border-mist-50"
-  />
-);
-
 /** Флажок с подписью и пояснением: нажимается вся строка (наборы модов в новой сборке) */
 export const CheckRow: React.FC<CheckRowProps> = ({
   label,
   description,
   checked,
   onChange,
-  disabled = false,
-  checkIcon: CheckIcon,
-}) => {
-  const { hover, handlers } = usePressFeedback({ disabled });
-  return (
-    <Pressable
-      {...handlers}
-      accessibilityRole="checkbox"
-      aria-checked={checked}
-      aria-disabled={disabled}
-      disabled={disabled}
-      onPress={() => onChange(!checked)}
-      style={disabled ? DIMMED : undefined}
-    >
-      <StateLayers
-        className="rounded-lg"
-        layers={[
-          { className: 'bg-mist-950/5 dark:bg-mist-50/5', progress: hover },
-        ]}
-      />
-      <View className="flex-row items-start gap-3 px-2 py-2">
-        <View
-          className={`mt-0.5 w-5 h-5 items-center justify-center rounded-md border ${
-            checked
-              ? 'bg-blue-500 border-blue-500'
-              : 'border-mist-300 dark:border-mist-700'
-          }`}
-        >
-          {checked &&
-            (CheckIcon ? (
-              <CheckIcon size={12} className="text-mist-50" />
-            ) : (
-              <CheckMark />
-            ))}
-        </View>
-        <View className="flex-1 gap-0.5">
-          <Text>{label}</Text>
-          {description ? (
-            <Text size="xs" tone="muted">
-              {description}
-            </Text>
-          ) : null}
-        </View>
-      </View>
-    </Pressable>
-  );
-};
+  disabled,
+  checkIcon,
+}) => (
+  <Checkbox
+    checked={checked}
+    onCheckedChange={onChange}
+    disabled={disabled}
+    checkIcon={checkIcon}
+  >
+    <Text>{label}</Text>
+    {description ? (
+      <Text size="xs" tone="muted">
+        {description}
+      </Text>
+    ) : null}
+  </Checkbox>
+);

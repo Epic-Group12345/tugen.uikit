@@ -12,19 +12,24 @@ import {
   View,
   type LayoutChangeEvent,
 } from 'react-native';
+import { PortalHost } from '@rn-primitives/portal';
+import {
+  dismissTopLayer,
+  placeFloating,
+  setHostSize,
+  useDismissLayer,
+  useHostSize,
+  type Anchor,
+  type Size,
+} from './layers';
 
 // Всплывающие окна (меню, выпадающие списки, пояснения) рисуются средствами React Native
 // поверх окна приложения, а не в отдельном нативном окне: нативный попап в RNW оказался
 // нестабильным. Popup регистрирует содержимое, PopupHost в корне приложения его рисует —
-// над всем остальным, у кнопки-якоря
+// над всем остальным, у кнопки-якоря. В том же PopupHost рисуются и порталы @rn-primitives
 
-export interface PopupAnchor {
-  /** DIP относительно окна приложения — как отдаёт measureInWindow */
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
+/** DIP относительно окна приложения — как отдаёт measureInWindow */
+export type PopupAnchor = Anchor;
 
 interface PopupEntry {
   id: number;
@@ -62,13 +67,10 @@ const remove = (id: number) => {
 
 /**
  * Закрыть верхнее окно, как по Escape. true — было что закрывать. В RNW клавиши приходят фокусу,
- * поэтому Escape ловит корень приложения и зовёт эту функцию; в вебе PopupHost слушает сам
+ * поэтому Escape ловит корень приложения и зовёт эту функцию; в вебе PopupHost слушает сам.
+ * Закрывает и окна на @rn-primitives (Popover, DropdownMenu, Dialog…) — у них общая стопка
  */
-export const dismissPopup = () => {
-  const top = entries[entries.length - 1];
-  top?.onDismiss();
-  return top !== undefined;
-};
+export const dismissPopup = dismissTopLayer;
 
 let nextId = 1;
 
@@ -95,6 +97,7 @@ export const Popup: React.FC<PopupProps> = ({
   if (!id.current) {
     id.current = nextId++;
   }
+  useDismissLayer(true, onDismiss);
   useLayoutEffect(() => {
     upsert({ id: id.current, anchor, offset, onDismiss, children });
   });
@@ -105,11 +108,6 @@ export const Popup: React.FC<PopupProps> = ({
   return null;
 };
 
-interface Size {
-  width: number;
-  height: number;
-}
-
 /** Место окна размера size у якоря в области host: под якорем, над ним или прижатое к краю */
 export const placePopup = (
   anchor: PopupAnchor,
@@ -117,16 +115,8 @@ export const placePopup = (
   host: Size,
   offset: number,
 ) => {
-  const below = anchor.y + anchor.height + offset;
-  const aboveTop = anchor.y - offset - size.height;
-  const above = below + size.height > host.height && aboveTop >= 0;
-  const maxLeft = Math.max(0, host.width - size.width);
-  return {
-    left: Math.min(Math.max(anchor.x, 0), maxLeft),
-    top: above
-      ? aboveTop
-      : Math.max(0, Math.min(below, host.height - size.height)),
-  };
+  const { left, top } = placeFloating(anchor, size, host, { offset });
+  return { left, top };
 };
 
 const PopupLayer: React.FC<{ entry: PopupEntry; host: Size }> = ({
@@ -170,6 +160,7 @@ const PopupLayer: React.FC<{ entry: PopupEntry; host: Size }> = ({
 
 interface WebKeyEvent {
   key: string;
+  defaultPrevented?: boolean;
   preventDefault: () => void;
 }
 interface WebDocument {
@@ -189,11 +180,13 @@ const WEB_FIXED =
     ? ({ position: 'fixed' } as unknown as object)
     : undefined;
 
-/** Слой всплывающих окон: последним в корне приложения, растянутым на всё окно */
+/**
+ * Слой всплывающих окон: последним в корне приложения, растянутым на всё окно. Рисует окна Popup
+ * и порталы @rn-primitives (окна Dialog, Popover, DropdownMenu, Select, Tooltip из kit)
+ */
 export const PopupHost: React.FC = () => {
   const list = useSyncExternalStore(subscribe, getEntries, getEntries);
-  const [host, setHost] = useState<Size>({ width: 0, height: 0 });
-  const hostRef = useRef(host);
+  const host = useHostSize();
 
   useEffect(() => {
     // В вебе Escape слушаем на документе сам. Типы DOM kit не подключает: в RN их нет
@@ -202,7 +195,8 @@ export const PopupHost: React.FC = () => {
       return;
     }
     const onKey = (e: WebKeyEvent) => {
-      if (e.key === 'Escape' && dismissPopup()) {
+      // Окна Radix (веб-версия @rn-primitives) закрываются сами и гасят событие
+      if (e.key === 'Escape' && !e.defaultPrevented && dismissPopup()) {
         e.preventDefault();
       }
     };
@@ -212,16 +206,7 @@ export const PopupHost: React.FC = () => {
 
   const onLayout = (e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout;
-    const prev = hostRef.current;
-    if (prev.width === width && prev.height === height) {
-      return;
-    }
-    // Окно поменяло размер — якоря уехали, открытые окна закрываем, как нативные меню
-    if (prev.width || prev.height) {
-      [...entries].reverse().forEach(entry => entry.onDismiss());
-    }
-    hostRef.current = { width, height };
-    setHost({ width, height });
+    setHostSize({ width, height });
   };
 
   return (
@@ -230,6 +215,7 @@ export const PopupHost: React.FC = () => {
       pointerEvents="box-none"
       onLayout={onLayout}
     >
+      <PortalHost />
       {list.map(entry => (
         <PopupLayer key={entry.id} entry={entry} host={host} />
       ))}

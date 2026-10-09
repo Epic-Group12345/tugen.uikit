@@ -17,12 +17,37 @@
     "./tokens.json": "./tokens/tokens.json",
     "./css": "./css/tugen.css",
     "./css/tugen.css": "./css/tugen.css",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./rn-primitives-portal": "./src/rnp-portal.tsx"
   },
   "scripts": {
     "css": "node scripts/build-css.mjs",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.src.json",
     "test": "jest"
+  },
+  "dependencies": {
+    "@rn-primitives/accordion": "1.5.2",
+    "@rn-primitives/alert-dialog": "1.5.2",
+    "@rn-primitives/avatar": "1.5.2",
+    "@rn-primitives/checkbox": "1.5.2",
+    "@rn-primitives/collapsible": "1.5.2",
+    "@rn-primitives/context-menu": "1.5.2",
+    "@rn-primitives/dialog": "1.5.2",
+    "@rn-primitives/dropdown-menu": "1.5.2",
+    "@rn-primitives/hover-card": "1.5.2",
+    "@rn-primitives/label": "1.5.2",
+    "@rn-primitives/popover": "1.5.2",
+    "@rn-primitives/portal": "1.5.2",
+    "@rn-primitives/progress": "1.5.2",
+    "@rn-primitives/radio-group": "1.5.2",
+    "@rn-primitives/select": "1.5.2",
+    "@rn-primitives/separator": "1.5.2",
+    "@rn-primitives/slot": "1.5.2",
+    "@rn-primitives/switch": "1.5.2",
+    "@rn-primitives/tabs": "1.5.2",
+    "@rn-primitives/toggle": "1.5.2",
+    "@rn-primitives/toggle-group": "1.5.2",
+    "@rn-primitives/tooltip": "1.5.2"
   },
   "peerDependencies": {
     "react": ">=19.1",

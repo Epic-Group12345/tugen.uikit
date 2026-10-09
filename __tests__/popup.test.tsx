@@ -35,7 +35,7 @@ it('у правого края окно прижимается внутрь', ()
 
 const tick = () => act(() => new Promise(resolve => setTimeout(resolve, 50)));
 
-it('Select открывает меню в PopupHost, выбирает и закрывается', async () => {
+it('Select открывает список в PopupHost, выбирает и закрывается', async () => {
   const onChange = jest.fn();
   const container = document.createElement('div');
   document.body.appendChild(container);
@@ -58,19 +58,19 @@ it('Select открывает меню в PopupHost, выбирает и зак�
   const combo = container.querySelector<HTMLElement>('[role="combobox"]')!;
   act(() => combo.click());
   await tick();
-  const items = container.querySelectorAll<HTMLElement>('[role="menuitem"]');
+  const items = container.querySelectorAll<HTMLElement>('[role="option"]');
   expect(items).toHaveLength(2);
   act(() => items[1].click());
   expect(onChange).toHaveBeenCalledWith('en');
-  expect(container.querySelectorAll('[role="menuitem"]')).toHaveLength(0);
+  expect(container.querySelectorAll('[role="option"]')).toHaveLength(0);
 
   // Escape закрывает открытое меню
   act(() => combo.click());
   await tick();
-  expect(container.querySelectorAll('[role="menuitem"]')).toHaveLength(2);
+  expect(container.querySelectorAll('[role="option"]')).toHaveLength(2);
   act(() => {
     expect(dismissPopup()).toBe(true);
   });
-  expect(container.querySelectorAll('[role="menuitem"]')).toHaveLength(0);
+  expect(container.querySelectorAll('[role="option"]')).toHaveLength(0);
   act(() => root.unmount());
 });

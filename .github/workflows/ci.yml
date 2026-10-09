@@ -23,5 +23,5 @@ jobs:
       - run: yarn typecheck
       - run: yarn test --ci
       - run: npx prettier --check src __tests__
-      # Витрина: kit собирается в Vite через react-native-web и Uniwind, как веб-приложение
+      # Витрина веб-слоя: собирается в чистом Vite + Tailwind, как веб-приложение
       - run: yarn gallery:build

@@ -1,16 +1,20 @@
 # tugen.uikit
 
 UI-kit TUGEN: визуальный язык лаунчера (`DESIGN.md` в tugen.launcher) одним пакетом для всех частей
-проекта. Одна библиотека компонентов на React Native для двух платформ:
+проекта. Две библиотеки в одном пакете — по одной на платформу, с общими токенами и правилом скругления:
 
-| Где                                                 | Как                                               |
-| --------------------------------------------------- | ------------------------------------------------- |
-| лаунчер (React Native Windows), мини-приложения игр | компоненты `@tugen/uikit` + Uniwind               |
-| веб — Vite + React                                  | те же компоненты через react-native-web + Uniwind |
+| Где                                                 | Что брать                                                  |
+| --------------------------------------------------- | ---------------------------------------------------------- |
+| лаунчер (React Native Windows), мини-приложения игр | `@tugen/uikit` — компоненты React Native на @rn-primitives + Uniwind |
+| веб — Vite + React                                  | `@tugen/uikit/web` — компоненты React DOM на Radix + Tailwind |
+
+Имена, варианты, размеры и классы у двух библиотек одни и те же (`Button variant="play"`, `Surface`,
+`DropdownMenu`…), поэтому веб выглядит как лаунчер. Отличаются только соглашения платформы: в вебе — события
+и доступность DOM (`onClick`, `aria-label`, атрибуты `<input>`).
 
 Токены — [tokens/tokens.json](tokens/tokens.json). Цвета — палитра Tailwind 4 (`mist`, `blue`, `green`,
 `red`, `amber`, `violet`) и роли поверх неё: `page`, `card`, `text`, `textMuted`, `accent`, `play`… У каждой
-роли пара — для светлой и тёмной темы; в компонентах роли записаны классами Uniwind.
+роли пара — для светлой и тёмной темы; в компонентах роли записаны классами Tailwind (в лаунчере их читает Uniwind).
 
 ## React Native
 
@@ -109,7 +113,7 @@ API составной, как в shadcn: `Dialog` + `DialogTrigger` + `DialogCo
 ```
 
 - **Escape.** В RNW клавиши приходят фокусу, поэтому корень приложения ловит Escape и зовёт `dismissPopup()` — она
-  закрывает верхнее окно любого вида (меню, `Dialog`, `Sheet`, `Popover`). В вебе это делают Radix и сам `PopupHost`.
+  закрывает верхнее окно любого вида (меню, `Dialog`, `Sheet`, `Popover`).
 - **Положение окон.** Встроенное в примитивы прижимает окна к размеру экрана (на Windows это весь монитор) и не
   переворачивает их. Kit ставит окна сам: по размеру `PopupHost`, под кнопкой или над ней, в пределах окна приложения.
   Смена размера окна закрывает открытые окна.
@@ -126,41 +130,54 @@ API составной, как в shadcn: `Dialog` + `DialogTrigger` + `DialogCo
         platform,
       ),
   }
-  // vite.config.ts
-  resolve: { alias: { '@rn-primitives/portal': '@tugen/uikit/rn-primitives-portal' } }
   ```
 
   Без алиаса всё работает на исходном пакете, с его ограничением.
-  Иконки kit не навязывает: `icon` — любой компонент с `size` и `className`, то есть `Icons.<Имя>` лаунчера.
-  Цвет иконки задаёт класс `text-*`, который передаёт сам элемент, поэтому он совпадает с цветом соседнего
-  текста. Нативных модулей лаунчера kit не требует. Анимации — только opacity и transform, на нативном
-  драйвере (в вебе — без него); цвета не анимируются, их меняют слои `StateLayers`.
+
+Иконки kit не навязывает: `icon` — любой компонент с `size` и `className`, то есть `Icons.<Имя>` лаунчера.
+Цвет иконки задаёт класс `text-*`, который передаёт сам элемент, поэтому он совпадает с цветом соседнего
+текста. Нативных модулей лаунчера kit не требует. Анимации — только opacity и transform, на нативном
+драйвере; цвета не анимируются, их меняют слои `StateLayers`.
 
 ## Веб: Vite + React
 
-В браузере те же компоненты работают через react-native-web с
-[плагином Uniwind для Vite](https://uniwind.dev): он подменяет `react-native` своими обёртками, которые
-понимают `className`. Поведение окон, меню и списков в вебе дают веб-версии `@rn-primitives/*` на Radix:
-фокус, Escape, клавиатура и положение у кнопки — их.
-
 ```bash
-yarn add react-dom react-native-web uniwind tailwindcss
+yarn add react react-dom tailwindcss @tugen/uikit
 yarn add -D vite @vitejs/plugin-react @tailwindcss/vite
 ```
 
-`vite.config.ts` — как у витрины, [example/vite.config.ts](example/vite.config.ts):
+```ts
+// vite.config.ts — ничего особого: kit и Radix собираются как обычные пакеты
+plugins: [tailwindcss(), react()];
+```
 
-- `tailwindcss()`, `uniwind({ cssEntryFile })` и `react()` в `plugins`;
-- `.web.tsx` / `.web.js` первыми в `resolve.extensions`: по ним `@rn-primitives/*` выбирают реализацию на Radix;
-- `@rn-primitives/*` публикуют JSX в `.js` — их надо прогнать через esbuild с `loader: 'jsx'` (плагин
-  `transform` для сборки и `optimizeDeps.esbuildOptions.loader` для dev-сервера);
-- `define: { __DEV__: …, global: 'globalThis' }` — их ждут библиотеки React Native;
-- алиас `@rn-primitives/portal` → `@tugen/uikit/rn-primitives-portal` (см. «Портал» выше).
+```css
+/* global.css */
+@import 'tailwindcss';
+@import '@tugen/uikit/web.css'; /* классы компонентов kit, тёмная тема, анимации появления */
+```
 
-В `global.css` приложения — `@source` на исходники kit, как для лаунчера. В корне — `<Toaster />` и
-`<PopupHost />`, тема — `Uniwind.setTheme`.
+```tsx
+import { Button, DropdownMenu, Section, Row, Toggle, Toaster, setTheme } from '@tugen/uikit/web';
 
-Витрина всех элементов — [example/](example/): `yarn gallery` запускает её в Vite, `yarn gallery:build`
+<Section title="Игра">
+  <Row title="Музыка" description="Фоновая музыка">
+    <Toggle value={music} onChange={setMusic} aria-label="Музыка" />
+  </Row>
+</Section>;
+<Button variant="play" onClick={play}>Играть</Button>;
+```
+
+- **Тема** — как в системе (`prefers-color-scheme`); `setTheme('dark' | 'light' | 'system')` задаёт её явно
+  классом на `<html>`. Классы `dark:` в компонентах те же, что в лаунчере.
+- **Окна, меню, списки, подсказки** — на Radix: фокус, Escape, клавиатура, положение у кнопки и порталы в
+  `document.body` — его. `PopupHost` в вебе не нужен (есть для совместимости и ничего не рисует), `<Toaster />`
+  поставьте один раз в корне.
+- **Триггеры.** `Button` и `IconButton` передают `ref` и все свойства `<button>`, поэтому работают под `asChild`:
+  `<DropdownMenuTrigger asChild><Button>Меню</Button></DropdownMenuTrigger>`.
+- **Брейкпоинты** — обычные `sm:` / `md:` Tailwind: в вебе они работают как надо.
+
+Витрина всех элементов веб-слоя — [example/](example/): `yarn gallery` запускает её в Vite, `yarn gallery:build`
 собирает (так её проверяет CI).
 
 ## Подключение
@@ -173,6 +190,6 @@ yarn add -D vite @vitejs/plugin-react @tailwindcss/vite
 ```bash
 yarn install
 yarn typecheck
-yarn test       # компоненты рисуются через react-native-web в jsdom
-yarn gallery    # витрина в браузере (Vite)
+yarn test       # компоненты лаунчера (через react-native-web в jsdom) и веб-слоя (React DOM)
+yarn gallery    # витрина веб-слоя в браузере (Vite)
 ```

@@ -154,7 +154,18 @@ document.getElementById("app").add section("Игра",
 ```
 
 Тема — как в системе; `setTheme(ctDark)` или `data-theme="dark"` на `<html>` задают её явно. Классы можно
-писать и руками: `<button class="tg-button tg-button--play">`. Живой пример — [example/](example/).
+писать и руками: `<button class="tg-button tg-button--play">`. Живой пример — [example/](example/),
+все элементы на одной странице — [example/gallery.html](example/gallery.html).
+
+Процедуры Nim повторяют компоненты RN: `dialog` и `sheet` (объект `Modal` с `open` / `close`, Escape и
+нажатие по затемнению), `dropdownMenu`, `contextMenu`, `select`, `popover`, `hoverCard`, `tooltip`, `tabs`,
+`accordion`, `collapsible`, `checkbox`, `radioGroup`, `toggleButton`, `toggleGroup`, `switch`, `formLabel`,
+`field`, `inputField`, `progress`, `avatar`, `avatarGroup`, `alert`, `toast`, `kbd`, `kbdCombo`, `surface`.
+
+Правило радиусов в CSS: контейнер (`.tg-menu`, `.tg-dialog`, `.tg-segmented`… или свой
+`class="tg-scope" style="--tg-outer: 16px; --tg-pad: 8px"`) задаёт `--tg-outer` и `--tg-pad`, из них
+считается `--tg-inner`; кнопки, пункты, сегменты и `.tg-nested` у его края берут `var(--tg-inner, свой
+радиус)`. Поверхность с отступом — `tg-card tg-pad--2`, вложенная — `tg-nested`.
 
 ## Подключение
 
@@ -169,4 +180,5 @@ yarn typecheck
 yarn test       # компоненты рисуются через react-native-web в jsdom
 yarn css        # пересобрать css/tugen.css после правки tokens/tokens.json
 nim js --path:nim -o:example/settings.js example/settings.nim   # пример для браузера
+nim js --path:nim -o:example/gallery.js example/gallery.nim     # витрина всех элементов
 ```

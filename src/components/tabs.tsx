@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import {
   Animated,
+  StyleSheet,
   View,
   type LayoutChangeEvent,
   type StyleProp,
@@ -283,7 +284,7 @@ const SegmentTrigger: React.FC<TabsTriggerProps & { fill: boolean }> = ({
       value={value}
       disabled={disabled}
       accessibilityLabel={accessibilityLabel}
-      style={style}
+      style={StyleSheet.flatten(style)}
     >
       <Animated.View style={pressStyle}>
         <StateLayers
@@ -332,7 +333,7 @@ const UnderlineTrigger: React.FC<
       disabled={disabled}
       accessibilityLabel={accessibilityLabel}
       onLayout={onLayout}
-      style={[fill && FILL, disabled && DIMMED]}
+      style={StyleSheet.flatten([fill && FILL, disabled && DIMMED])}
     >
       {/* Отступ снизу — место под полосу, чтобы фон наведения её не закрывал */}
       <View className="pb-1">

@@ -51,6 +51,11 @@ const SIZE: Record<SheetSide, string> = {
 };
 
 // Где панель стоит в окне
+// В вебе Radix оборачивает Content в свой div без стилей: flex: 1 внутри него не тянется. Строка
+// растягивает этот div на всю высоту (align-items: stretch), а height: 100% передаёт её панели
+const WEB_STRETCH: ViewStyle = { flexDirection: 'row' };
+const WEB_FULL: ViewStyle = { height: '100%' };
+
 const PLACE: Record<SheetSide, ViewStyle> = {
   right: { position: 'absolute', top: 0, bottom: 0, right: 0 },
   left: { position: 'absolute', top: 0, bottom: 0, left: 0 },
@@ -129,7 +134,11 @@ export const SheetContent: React.FC<SheetContentProps> = ({
     <DialogPrimitive.Portal hostName={portalHost} forceMount>
       <View
         pointerEvents={root.open ? 'box-none' : 'none'}
-        style={[StyleSheet.absoluteFill, !native && WEB_FIXED]}
+        // Веб-портал Radix отдаёт стиль через Slot, а тот склеивает только объекты — массив сломал бы стиль
+        style={StyleSheet.flatten<ViewStyle>([
+          StyleSheet.absoluteFill,
+          !native && WEB_FIXED,
+        ])}
       >
         <Animated.View style={[StyleSheet.absoluteFill, motion.fade]}>
           <DialogPrimitive.Overlay forceMount style={StyleSheet.absoluteFill}>
@@ -144,11 +153,12 @@ export const SheetContent: React.FC<SheetContentProps> = ({
               ? { maxHeight: host.height * BOTTOM_MAX_RATIO }
               : null,
             motion.slide,
+            !native && side !== 'bottom' && WEB_STRETCH,
           ]}
         >
           <DialogPrimitive.Content
             forceMount
-            style={side === 'bottom' ? null : styles.full}
+            style={side === 'bottom' ? null : native ? styles.full : WEB_FULL}
             aria-label={accessibilityLabel}
           >
             <RadiusScope radius={RADIUS} padding={PADDING}>

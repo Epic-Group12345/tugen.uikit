@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { View, type ImageSourcePropType } from 'react-native';
+import { StyleSheet, View, type ImageSourcePropType } from 'react-native';
 import * as AvatarPrimitive from '@rn-primitives/avatar';
 import { outerRadius, radiusProps, toRadius, type RadiusStep } from '../radius';
 import { Text, type TextSize } from './text';
@@ -178,7 +178,7 @@ export const AvatarImage: React.FC<AvatarImageProps> = ({
 }) => (
   <AvatarPrimitive.Image
     {...props}
-    style={[{ width: '100%', height: '100%' }, style]}
+    style={StyleSheet.flatten([{ width: '100%', height: '100%' }, style])}
   />
 );
 

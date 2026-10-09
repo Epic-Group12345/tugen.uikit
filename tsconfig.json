@@ -16,6 +16,7 @@
   },
   "include": [
     "src",
+    "example",
     "__tests__",
     "uniwind-env.d.ts"
   ]

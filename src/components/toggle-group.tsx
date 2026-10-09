@@ -1,9 +1,16 @@
 import React, { useMemo } from 'react';
-import { Animated, Pressable, View } from 'react-native';
+import {
+  Animated,
+  Pressable,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native';
 import * as SwitchPrimitive from '@rn-primitives/switch';
 import * as TogglePrimitive from '@rn-primitives/toggle';
 import * as ToggleGroupPrimitive from '@rn-primitives/toggle-group';
 import {
+  nativeDriver,
   StateLayers,
   useAnimatedFlag,
   useFlipOffset,
@@ -22,6 +29,11 @@ import { Text } from './text';
 // collapsable={false} (наведение на Windows)
 
 const DIMMED = { opacity: motion.dimmed };
+
+// flex-1 в вебе — flex-basis 0: в ряду по ширине содержимого (self-start) браузер сжимал сегменты
+// до многоточия, а Yoga меряет их по подписи. flex-basis: auto возвращает подписи место, а в узком
+// ряду сегменты по-прежнему сжимаются
+const WEB_GROW: ViewStyle | null = nativeDriver ? null : { flexBasis: 'auto' };
 
 // Иконка и подпись одного цвета: яркие у выбранного и при наведении
 const contentClass = (active: boolean) =>
@@ -350,7 +362,7 @@ export const ToggleGroupItem: React.FC<ToggleGroupItemProps> = ({
         {...handlers}
         accessibilityLabel={accessibilityLabel}
         aria-disabled={off}
-        style={disabled ? DIMMED : undefined}
+        style={StyleSheet.flatten([grow && WEB_GROW, disabled && DIMMED])}
         className={grow ? 'flex-1' : undefined}
       >
         <Animated.View style={pressStyle}>

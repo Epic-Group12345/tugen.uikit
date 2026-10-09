@@ -1,0 +1,5 @@
+/* Классы Uniwind из исходников kit и витрины — так же подключает kit любое веб-приложение */
+@source "../../src/**/*.{ts,tsx}";
+@source "./**/*.{ts,tsx}";
+@import 'tailwindcss';
+@import 'uniwind';

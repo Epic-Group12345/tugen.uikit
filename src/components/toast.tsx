@@ -5,7 +5,14 @@ import React, {
   useState,
   useSyncExternalStore,
 } from 'react';
-import { Animated, Pressable, StyleSheet, View } from 'react-native';
+import {
+  Animated,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native';
 import { StateLayers, useAppear, usePressFeedback } from '../animation';
 import { RadiusScope, radiusProps, useInnerRadius } from '../radius';
 import { motion } from '../tokens';
@@ -99,6 +106,12 @@ export interface ToasterProps {
   closeLabel?: string;
 }
 
+// В вебе корень приложения бывает выше окна (страница прокручивается): уведомления держатся окна
+const LAYER = StyleSheet.flatten<ViewStyle>([
+  StyleSheet.absoluteFill,
+  Platform.OS === 'web' && ({ position: 'fixed' } as unknown as ViewStyle),
+]);
+
 /**
  * Слой уведомлений: в корне приложения, растянутым на всё окно, рядом с PopupHost (перед ним —
  * тогда меню открываются поверх уведомлений). Новые — внизу стопки
@@ -113,7 +126,7 @@ export const Toaster: React.FC<ToasterProps> = ({
     return null;
   }
   return (
-    <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+    <View style={LAYER} pointerEvents="box-none">
       <View pointerEvents="box-none" className={POSITION[position]}>
         {list.slice(-max).map(entry => (
           <ToastCard key={entry.id} entry={entry} closeLabel={closeLabel} />

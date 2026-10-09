@@ -1,6 +1,5 @@
 // @tugen/uikit — визуальный язык TUGEN (DESIGN.md лаунчера) в одном пакете: токены и
-// компоненты React Native для лаунчера, мини-приложений игр и веба через react-native-web.
-// Для веба без React — css/tugen.css и nim/tugen_uikit.nim из тех же токенов
+// компоненты React Native для лаунчера, мини-приложений игр и веба (Vite + React через react-native-web)
 
 export * from './tokens';
 export * from './radius';

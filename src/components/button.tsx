@@ -1,18 +1,29 @@
 import React, { useMemo } from 'react';
 import { Animated, Pressable, View } from 'react-native';
 import { StateLayers, useAnimatedFlag, usePressFeedback } from '../animation';
+import { radiusProps, useInnerRadius } from '../radius';
 import type { IconComponent } from './icon';
 import { Text } from './text';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'play';
-export type ButtonSize = 'sm' | 'md';
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'play'
+  | 'ghost'
+  | 'outline'
+  | 'danger';
+export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps {
   children?: React.ReactNode;
   onPress?: () => void;
   /** Момент нажатия, до отпускания — нужен кнопке, которая открывает меню (useDropdownMenu) */
   onPressIn?: () => void;
-  /** primary — синяя, одно главное действие на экране; secondary — нейтральная; play — зелёная, только запуск игры */
+  /**
+   * primary — синяя, одно главное действие на экране; secondary — нейтральная; play — зелёная,
+   * только запуск игры; ghost — без фона, фон при наведении; outline — с рамкой; danger — красная,
+   * необратимое действие (удалить)
+   */
   variant?: ButtonVariant;
   size?: ButtonSize;
   icon?: IconComponent;
@@ -32,18 +43,35 @@ const LAYERS: Record<ButtonVariant, [string, string, string]> = {
     'bg-mist-300 dark:bg-mist-700',
     'bg-mist-400 dark:bg-mist-600',
   ],
+  ghost: [
+    'bg-mist-950/0',
+    'bg-mist-950/5 dark:bg-mist-50/5',
+    'bg-mist-950/10 dark:bg-mist-50/10',
+  ],
+  outline: [
+    'border border-mist-200 dark:border-mist-800',
+    'bg-mist-950/5 dark:bg-mist-50/5',
+    'bg-mist-950/10 dark:bg-mist-50/10',
+  ],
+  danger: ['bg-red-600', 'bg-red-700', 'bg-red-800'],
 };
 
 const CONTENT: Record<ButtonVariant, string> = {
   primary: 'text-mist-50',
   play: 'text-mist-50',
   secondary: 'text-mist-900 dark:text-mist-100',
+  ghost: 'text-mist-900 dark:text-mist-100',
+  outline: 'text-mist-900 dark:text-mist-100',
+  danger: 'text-mist-50',
 };
 
 const PADDING: Record<ButtonSize, string> = {
   sm: 'px-3 py-1.5',
   md: 'px-4 py-2',
+  lg: 'px-5 py-2.5',
 };
+
+const ICON_SIZE: Record<ButtonSize, number> = { sm: 14, md: 14, lg: 16 };
 
 const DIMMED = { opacity: 0.5 };
 
@@ -60,6 +88,8 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const { hover, press, pressStyle, handlers } = usePressFeedback({ disabled });
   const [base, hovered, pressed] = LAYERS[variant];
+  // У края окна, меню или уведомления радиус — по правилу вложенности, иначе rounded-lg
+  const rounded = radiusProps(useInnerRadius('lg'));
 
   return (
     <Pressable
@@ -77,7 +107,8 @@ export const Button: React.FC<ButtonProps> = ({
     >
       <Animated.View style={[pressStyle, disabled && DIMMED]}>
         <StateLayers
-          className="rounded-lg"
+          className={rounded.className}
+          style={rounded.style}
           layers={[
             { className: base },
             { className: hovered, progress: hover },
@@ -87,8 +118,12 @@ export const Button: React.FC<ButtonProps> = ({
         <View
           className={`flex-row items-center justify-center gap-1.5 ${PADDING[size]}`}
         >
-          {Icon && <Icon size={14} className={CONTENT[variant]} />}
-          <Text numberOfLines={1} className={CONTENT[variant]}>
+          {Icon && <Icon size={ICON_SIZE[size]} className={CONTENT[variant]} />}
+          <Text
+            numberOfLines={1}
+            size={size === 'lg' ? 'base' : 'sm'}
+            className={CONTENT[variant]}
+          >
             {children}
           </Text>
         </View>
@@ -132,6 +167,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
 }) => {
   const { hover, press, handlers } = usePressFeedback({ disabled });
   const dim = useAnimatedFlag(disabled, { in: 150 });
+  const rounded = radiusProps(useInnerRadius('lg'));
   // Интерполяции — одни на кнопку: новые на каждый рендер (а он на каждое наведение)
   // заставляли бы нативный драйвер пересоздавать узлы анимации
   const style = useMemo(
@@ -172,7 +208,8 @@ export const IconButton: React.FC<IconButtonProps> = ({
     >
       <Animated.View style={style}>
         <StateLayers
-          className="rounded-lg"
+          className={rounded.className}
+          style={rounded.style}
           layers={[
             { className: 'bg-mist-100/0 dark:bg-mist-900/0' },
             { className: 'bg-mist-950/5 dark:bg-mist-50/5', progress: hover },

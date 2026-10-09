@@ -1,7 +1,21 @@
 // Компоненты проверяем в вебе: react-native-web вместо react-native. Так тесты заодно
-// подтверждают, что kit работает в браузере
+// подтверждают, что kit работает в браузере. @rn-primitives подключаем нативной версией
+// (index.js → dialog.js, а не dialog.web.js): тесты проверяют то, что пойдёт в лаунчер.
+// Пакеты @rn-primitives публикуют JSX как есть — их тоже прогоняем через ts-jest
 module.exports = {
-  preset: 'ts-jest',
   testEnvironment: 'jsdom',
-  moduleNameMapper: { '^react-native$': 'react-native-web' },
+  testPathIgnorePatterns: ['/node_modules/', '/__tests__/support/'],
+  transform: {
+    '^.+\\.tsx?$': 'ts-jest',
+    '^.+/@rn-primitives/.+\\.js$': [
+      'ts-jest',
+      { tsconfig: { allowJs: true, jsx: 'react-jsx' }, isolatedModules: true },
+    ],
+  },
+  transformIgnorePatterns: ['/node_modules/(?!@rn-primitives/)'],
+  moduleNameMapper: {
+    '^react-native$': '<rootDir>/__tests__/support/react-native.js',
+    // Портал с ключами — как советует README для приложений
+    '^@rn-primitives/portal$': '<rootDir>/src/rnp-portal.tsx',
+  },
 };

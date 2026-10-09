@@ -1,5 +1,14 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, type StyleProp, type ViewStyle } from 'react-native';
+import {
+  PADDING_CLASS,
+  RadiusScope,
+  radiusProps,
+  toRadius,
+  useInnerRadius,
+  type RadiusStep,
+  type SpaceStep,
+} from '../radius';
 import { Text } from './text';
 
 export type SurfaceKind = 'window' | 'page' | 'card' | 'overlay' | 'neutral';
@@ -9,25 +18,73 @@ export type SurfaceKind = 'window' | 'page' | 'card' | 'overlay' | 'neutral';
 const SURFACE: Record<SurfaceKind, string> = {
   window: 'bg-mist-100 dark:bg-mist-900',
   page: 'bg-mist-50 dark:bg-mist-950',
-  card: 'rounded-xl bg-mist-100 dark:bg-mist-900',
+  card: 'bg-mist-100 dark:bg-mist-900',
   overlay:
-    'rounded-xl border border-mist-200 dark:border-mist-800 bg-mist-50 dark:bg-mist-900',
-  neutral: 'rounded-lg bg-mist-200 dark:bg-mist-800',
+    'border border-mist-200 dark:border-mist-800 bg-mist-50 dark:bg-mist-900',
+  neutral: 'bg-mist-200 dark:bg-mist-800',
+};
+
+// Скругление уровня по умолчанию: окно и страница — без него
+const DEFAULT_RADIUS: Record<SurfaceKind, RadiusStep> = {
+  window: 'none',
+  page: 'none',
+  card: 'xl',
+  overlay: 'xl',
+  neutral: 'lg',
 };
 
 export interface SurfaceProps {
   /** Уровень поверхности: окно, страница, карточка, всплывающее окно или меню */
   kind?: SurfaceKind;
-  /** Дополнительные классы Uniwind: раскладка и отступы */
+  /** Скругление вместо обычного для уровня */
+  radius?: RadiusStep;
+  /**
+   * Отступ до содержимого. С ним поверхность становится контейнером правила радиусов:
+   * вложенные Surface nested, кнопки и пункты получат radius − padding
+   */
+  padding?: SpaceStep;
+  /**
+   * Вложенная поверхность: скругление по правилу из ближайшего контейнера (внешний радиус
+   * минус его отступ), а не своё. Плашка в карточке, картинка в окне
+   */
+  nested?: boolean;
+  /** Дополнительные классы Uniwind: раскладка и отступы по осям */
   className?: string;
+  style?: StyleProp<ViewStyle>;
   children?: React.ReactNode;
 }
 
 export const Surface: React.FC<SurfaceProps> = ({
   kind = 'card',
+  radius,
+  padding,
+  nested = false,
   className = '',
+  style,
   children,
-}) => <View className={`${SURFACE[kind]} ${className}`}>{children}</View>;
+}) => {
+  const own = toRadius(radius ?? DEFAULT_RADIUS[kind]);
+  const inherited = useInnerRadius(own);
+  const r = nested ? inherited : own;
+  const rounded = radiusProps(r);
+  const body = (
+    <View
+      className={`${SURFACE[kind]} ${rounded.className} ${
+        padding ? PADDING_CLASS[padding] : ''
+      } ${className}`}
+      style={rounded.style ? [rounded.style, style] : style}
+    >
+      {children}
+    </View>
+  );
+  return padding ? (
+    <RadiusScope radius={r} padding={padding}>
+      {body}
+    </RadiusScope>
+  ) : (
+    body
+  );
+};
 
 /** Разделитель h-px; inset — с отступами по краям, как между строками карточки */
 export const Divider: React.FC<{ inset?: boolean }> = ({ inset = false }) => (

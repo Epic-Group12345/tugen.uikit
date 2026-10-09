@@ -5,7 +5,15 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Animated, Easing, Platform, StyleSheet, View } from 'react-native';
+import {
+  Animated,
+  Easing,
+  Platform,
+  StyleSheet,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 import { motion } from './tokens';
 
 // Анимации kit — только opacity и transform на нативном драйвере: в RNW они идут в Windows
@@ -176,8 +184,11 @@ export interface StateLayer {
  */
 export const StateLayers: React.FC<{
   layers: StateLayer[];
+  /** Общие классы слоёв: скругление */
   className?: string;
-}> = ({ layers, className = '' }) => (
+  /** Общий стиль слоёв: скругление вне шкалы классов (radiusProps) */
+  style?: StyleProp<ViewStyle>;
+}> = ({ layers, className = '', style }) => (
   <>
     {layers.map((layer, i) => (
       <Animated.View
@@ -189,7 +200,10 @@ export const StateLayers: React.FC<{
         ]}
       >
         {/* Классы — на обычном View: Animated.View из react-native Uniwind не оборачивает */}
-        <View className={`flex-1 ${className} ${layer.className}`} />
+        <View
+          className={`flex-1 ${className} ${layer.className}`}
+          style={style}
+        />
       </Animated.View>
     ))}
   </>

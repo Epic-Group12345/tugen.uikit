@@ -1,0 +1,50 @@
+@import 'tailwindcss';
+/* В приложении: @import '@tugen/uikit/web.css' — здесь kit берётся из исходников */
+@import '../../src/web/tugen.css';
+@source "./";
+
+body {
+  @apply bg-mist-50 dark:bg-mist-950 text-mist-950 dark:text-mist-50 font-sans antialiased;
+}
+
+/* Якорь заголовка не прячется под шапкой */
+[id] {
+  scroll-margin-top: 5rem;
+}
+
+/* Цвета подсветки кода (ui/code.tsx) — из палитры kit, своя пара на тему */
+:root {
+  --code-plain: var(--color-mist-900);
+  --code-comment: var(--color-mist-500);
+  --code-keyword: var(--color-violet-700);
+  --code-string: var(--color-green-700);
+  --code-tag: var(--color-blue-700);
+  --code-attr: var(--color-amber-700);
+  --code-number: var(--color-red-600);
+  --code-punctuation: var(--color-mist-500);
+}
+
+/* Тёмная — как вариант dark в tugen.css: класс .dark или система без .light */
+:root.dark {
+  --code-plain: var(--color-mist-100);
+  --code-comment: var(--color-mist-500);
+  --code-keyword: var(--color-violet-400);
+  --code-string: var(--color-green-400);
+  --code-tag: var(--color-blue-400);
+  --code-attr: var(--color-amber-400);
+  --code-number: var(--color-red-400);
+  --code-punctuation: var(--color-mist-400);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --code-plain: var(--color-mist-100);
+    --code-comment: var(--color-mist-500);
+    --code-keyword: var(--color-violet-400);
+    --code-string: var(--color-green-400);
+    --code-tag: var(--color-blue-400);
+    --code-attr: var(--color-amber-400);
+    --code-number: var(--color-red-400);
+    --code-punctuation: var(--color-mist-400);
+  }
+}

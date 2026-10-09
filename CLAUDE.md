@@ -11,7 +11,8 @@ Tailwind (`src/web/`, `@tugen/uikit/web`, веб на Vite). react-native-web в
 yarn typecheck
 yarn test
 yarn gallery    # витрина веб-слоя в браузере (Vite); yarn gallery:build — сборка, как в CI
-npx prettier --check src __tests__
+yarn docs       # сайт документации (Vite); yarn docs:build — сборка, как в CI
+npx prettier --check src __tests__ docs/src
 ```
 
 ## Правила
@@ -21,6 +22,9 @@ npx prettier --check src __tests__
   именами, вариантами, размерами и классами; в вебе — события и доступность DOM (`onClick`, `aria-label`, `ref`).
   Веб-компонент — с примером в витрине (`example/src/sections/`) и тестом в `__tests__/web/`; проверь его в
   браузере (`yarn gallery`).
+- **Документация** (`docs/`): новый компонент — со страницей `docs/src/components/<имя>/` (`page.tsx` и примеры
+  `*.example.tsx`, импорт только из `@tugen/uikit/web`). Свойства на странице берутся из типов, поэтому описание
+  свойства пиши JSDoc-комментарием в интерфейсе пропсов. Изменилось поведение или API — поправь и страницу.
 - **Общее у библиотек — только платформенно-нейтральные модули**: `tokens.ts`, `radius.tsx`, `tone.ts`, тип
   `components/icon.ts`. `src/web/` не импортирует `react-native` и компоненты RN, `src/components/` — `src/web/`.
 - **Веб-слой**: div — блочный, раскладку пиши явно (`flex flex-col`). Появление и исчезновение окон — анимациями

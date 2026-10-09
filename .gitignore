@@ -1,3 +1,4 @@
 node_modules/
 example/dist/
 uniwind-types.d.ts
+docs/dist/

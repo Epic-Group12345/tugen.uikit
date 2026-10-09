@@ -31,3 +31,31 @@ if (typeof PointerEvent === 'undefined') {
   }
   (globalThis as { PointerEvent?: unknown }).PointerEvent = PointerEventStub;
 }
+
+// DOMRect в jsdom нет, а ContextMenu Radix строит из него якорь у точки нажатия
+if (typeof DOMRect === 'undefined') {
+  class DOMRectStub {
+    constructor(
+      public x = 0,
+      public y = 0,
+      public width = 0,
+      public height = 0,
+    ) {}
+    get top() {
+      return this.y;
+    }
+    get left() {
+      return this.x;
+    }
+    get right() {
+      return this.x + this.width;
+    }
+    get bottom() {
+      return this.y + this.height;
+    }
+    static fromRect(r: DOMRectInit = {}) {
+      return new DOMRectStub(r.x, r.y, r.width, r.height);
+    }
+  }
+  (globalThis as { DOMRect?: unknown }).DOMRect = DOMRectStub;
+}

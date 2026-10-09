@@ -145,7 +145,13 @@ export const RadioGroupItem: React.FC<RadioGroupItemProps> = ({
         {row ? (
           <View className="flex-row items-start gap-3 px-2 py-2">
             <RadioCircle checked={checked} className="mt-0.5" />
-            <View className="flex-1 gap-0.5">{children}</View>
+            <View className="flex-1 gap-0.5">
+              {typeof children === 'string' || typeof children === 'number' ? (
+                <Text>{children}</Text>
+              ) : (
+                children
+              )}
+            </View>
           </View>
         ) : (
           <RadioCircle checked={checked} />

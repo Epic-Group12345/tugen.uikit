@@ -1,26 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TUGEN UI-kit</title>
-    <link rel="stylesheet" href="../css/tugen.css" />
     <style>
-      #app {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 32px;
+      html,
+      body,
+      #root {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        font-family: 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif;
       }
     </style>
   </head>
   <body>
-    <div id="app">
-      <a class="tg-text tg-text--xs tg-text--info" href="gallery.html">Все элементы kit →</a>
-    </div>
-    <!-- nim js --path:nim -o:example/settings.js example/settings.nim -->
-    <script src="settings.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

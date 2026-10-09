@@ -113,6 +113,32 @@ it('неактивная кнопка не нажимается', () => {
   unmount();
 });
 
+it('кнопка отдаёт триггеру примитива ref и его пропсы (asChild)', () => {
+  // Веб-версии примитивов ставят окно у кнопки по ref, а меню Radix открывают по onPointerDown
+  const ref = React.createRef<import('react-native').View>();
+  const onKeyDown = jest.fn();
+  const { container, unmount } = mount(
+    <>
+      {/* onKeyDown есть только в react-native-web: Radix передаёт его как есть */}
+      <Button ref={ref} aria-expanded {...({ onKeyDown } as object)}>
+        Меню
+      </Button>
+      <IconButton icon={Dot} accessibilityLabel="Ещё" aria-haspopup="menu" />
+    </>,
+  );
+  const [button, icon] = Array.from(
+    container.querySelectorAll<HTMLElement>('[role="button"]'),
+  );
+  expect(ref.current).toBe(button);
+  expect(button.getAttribute('aria-expanded')).toBe('true');
+  expect(icon.getAttribute('aria-haspopup')).toBe('menu');
+  act(() => {
+    button.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true }));
+  });
+  expect(onKeyDown).toHaveBeenCalled();
+  unmount();
+});
+
 it('сегменты выбирают вариант', () => {
   const onChange = jest.fn();
   const { container, unmount } = mount(

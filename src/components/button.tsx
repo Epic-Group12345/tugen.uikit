@@ -1,5 +1,12 @@
 import React, { useMemo } from 'react';
-import { Animated, Pressable, View } from 'react-native';
+import {
+  Animated,
+  Pressable,
+  View,
+  type GestureResponderEvent,
+  type MouseEvent,
+  type PressableProps,
+} from 'react-native';
 import { StateLayers, useAnimatedFlag, usePressFeedback } from '../animation';
 import { radiusProps, useInnerRadius } from '../radius';
 import type { IconComponent } from './icon';
@@ -14,7 +21,35 @@ export type ButtonVariant =
   | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
-export interface ButtonProps {
+/**
+ * Остальные пропсы Pressable — для asChild: триггер примитива отдаёт кнопке ref (по нему веб-версия
+ * ставит окно у кнопки), aria-expanded, onKeyDown и onPointerDown (меню Radix открывается по нему)
+ */
+type PassThrough = Omit<
+  PressableProps,
+  'children' | 'style' | 'onPress' | 'onPressIn' | 'disabled'
+> & { ref?: React.Ref<View> };
+
+/** Обработчики отклика kit вместе с теми, что пришли от примитива: свои не заглушают чужие */
+const useMergedHandlers = (
+  handlers: ReturnType<typeof usePressFeedback>['handlers'],
+  rest: PassThrough,
+) => ({
+  onHoverIn: (e: MouseEvent) => {
+    handlers.onHoverIn();
+    rest.onHoverIn?.(e);
+  },
+  onHoverOut: (e: MouseEvent) => {
+    handlers.onHoverOut();
+    rest.onHoverOut?.(e);
+  },
+  onPressOut: (e: GestureResponderEvent) => {
+    handlers.onPressOut();
+    rest.onPressOut?.(e);
+  },
+});
+
+export interface ButtonProps extends PassThrough {
   children?: React.ReactNode;
   onPress?: () => void;
   /** Момент нажатия, до отпускания — нужен кнопке, которая открывает меню (useDropdownMenu) */
@@ -85,15 +120,18 @@ export const Button: React.FC<ButtonProps> = ({
   disabled = false,
   grow = false,
   accessibilityLabel,
+  ...rest
 }) => {
   const { hover, press, pressStyle, handlers } = usePressFeedback({ disabled });
+  const merged = useMergedHandlers(handlers, rest);
   const [base, hovered, pressed] = LAYERS[variant];
   // У края окна, меню или уведомления радиус — по правилу вложенности, иначе rounded-lg
   const rounded = radiusProps(useInnerRadius('lg'));
 
   return (
     <Pressable
-      {...handlers}
+      {...rest}
+      {...merged}
       onPressIn={() => {
         handlers.onPressIn();
         onPressIn?.();
@@ -141,7 +179,7 @@ const ICON_TONE: Record<IconTone, string> = {
   success: 'text-green-600 dark:text-green-400',
 };
 
-export interface IconButtonProps {
+export interface IconButtonProps extends PassThrough {
   icon: IconComponent;
   onPress?: () => void;
   /** Момент нажатия, до отпускания */
@@ -164,8 +202,10 @@ export const IconButton: React.FC<IconButtonProps> = ({
   onHoverChange,
   tone = 'default',
   accessibilityLabel,
+  ...rest
 }) => {
   const { hover, press, handlers } = usePressFeedback({ disabled });
+  const merged = useMergedHandlers(handlers, rest);
   const dim = useAnimatedFlag(disabled, { in: 150 });
   const rounded = radiusProps(useInnerRadius('lg'));
   // Интерполяции — одни на кнопку: новые на каждый рендер (а он на каждое наведение)
@@ -187,18 +227,19 @@ export const IconButton: React.FC<IconButtonProps> = ({
 
   return (
     <Pressable
-      {...handlers}
+      {...rest}
+      {...merged}
       onPress={onPress}
       disabled={disabled}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       aria-disabled={disabled}
-      onHoverIn={() => {
-        handlers.onHoverIn();
+      onHoverIn={e => {
+        merged.onHoverIn(e);
         onHoverChange?.(true);
       }}
-      onHoverOut={() => {
-        handlers.onHoverOut();
+      onHoverOut={e => {
+        merged.onHoverOut(e);
         onHoverChange?.(false);
       }}
       onPressIn={() => {

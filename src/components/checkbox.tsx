@@ -4,6 +4,7 @@ import * as CheckboxPrimitive from '@rn-primitives/checkbox';
 import { StateLayers, usePressFeedback } from '../animation';
 import { radiusProps, useInnerRadius } from '../radius';
 import { motion } from '../tokens';
+import { Text } from './text';
 import { useFieldControl } from './field';
 import type { IconComponent } from './icon';
 import { useLabelTarget } from './label';
@@ -155,7 +156,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({
               checkIcon={checkIcon}
               className="mt-0.5"
             />
-            <View className="flex-1 gap-0.5">{children}</View>
+            <View className="flex-1 gap-0.5">
+              {typeof children === 'string' || typeof children === 'number' ? (
+                <Text>{children}</Text>
+              ) : (
+                children
+              )}
+            </View>
           </View>
         ) : (
           <CheckboxBox

@@ -2,5 +2,7 @@
   // Исходники kit — без типов DOM, как в React Native: так tsc ловит обращения к document и window
   "extends": "./tsconfig.json",
   "compilerOptions": { "lib": ["ESNext"], "types": [] },
-  "include": ["src", "uniwind-env.d.ts"]
+  "include": ["src", "uniwind-env.d.ts"],
+  // Веб-слой живёт в DOM: его проверяет основной tsconfig.json
+  "exclude": ["src/web"]
 }

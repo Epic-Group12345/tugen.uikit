@@ -1,0 +1,110 @@
+/*
+ * Веб-слой @tugen/uikit для Tailwind 4: подключите после tailwindcss в global.css приложения:
+ *
+ *   @import 'tailwindcss';
+ *   @import '@tugen/uikit/web.css';
+ *
+ * @source ниже даёт Tailwind найти классы компонентов kit — без него их стили не соберутся.
+ */
+@source "./";
+/* Общие с лаунчером словари классов: цвета текста и шкала скруглений */
+@source "../tone.ts";
+@source "../radius.tsx";
+
+/*
+ * Тёмная тема — как в системе; класс .dark или .light на <html> (setTheme) задаёт её явно.
+ * Классы dark: в компонентах те же, что в лаунчере, где тему ставит Uniwind
+ */
+@custom-variant dark {
+  &:where(.dark, .dark *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:not(.light, .light *)) {
+      @slot;
+    }
+  }
+}
+
+@theme {
+  --font-sans: 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system,
+    sans-serif;
+  --font-mono: Consolas, 'Cascadia Mono', ui-monospace, monospace;
+
+  /* Появление окон и меню — только opacity и transform, длительности из tokens.json (motion) */
+  --animate-tg-fade-in: tg-fade-in 120ms ease-out;
+  --animate-tg-fade-out: tg-fade-out 120ms ease-in forwards;
+  --animate-tg-pop-in: tg-pop-in 120ms ease-out;
+  --animate-tg-pop-out: tg-pop-out 120ms ease-in forwards;
+  --animate-tg-slide-in-right: tg-slide-in-right 180ms ease-out;
+  --animate-tg-slide-out-right: tg-slide-out-right 180ms ease-in forwards;
+  --animate-tg-slide-in-left: tg-slide-in-left 180ms ease-out;
+  --animate-tg-slide-out-left: tg-slide-out-left 180ms ease-in forwards;
+  --animate-tg-slide-in-bottom: tg-slide-in-bottom 180ms ease-out;
+  --animate-tg-slide-out-bottom: tg-slide-out-bottom 180ms ease-in forwards;
+  --animate-tg-shimmer: tg-shimmer 1.2s ease-in-out infinite;
+
+  @keyframes tg-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes tg-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes tg-pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+  @keyframes tg-pop-out {
+    to {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+  @keyframes tg-slide-in-right {
+    from {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes tg-slide-out-right {
+    to {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes tg-slide-in-left {
+    from {
+      transform: translateX(-100%);
+    }
+  }
+  @keyframes tg-slide-out-left {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+  @keyframes tg-slide-in-bottom {
+    from {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes tg-slide-out-bottom {
+    to {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes tg-shimmer {
+    50% {
+      opacity: 0.5;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class*='animate-tg-'] {
+    animation-duration: 1ms !important;
+  }
+}

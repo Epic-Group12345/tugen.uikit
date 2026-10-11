@@ -22,6 +22,8 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn typecheck
       - run: yarn test --ci
-      - run: npx prettier --check src __tests__
+      - run: npx prettier --check src __tests__ docs/src
       # Витрина веб-слоя: собирается в чистом Vite + Tailwind, как веб-приложение
       - run: yarn gallery:build
+      # Документация: тот же Vite, таблицы свойств собираются из типов kit
+      - run: yarn docs:build

@@ -180,6 +180,16 @@ import { Button, DropdownMenu, Section, Row, Toggle, Toaster, setTheme } from '@
 Витрина всех элементов веб-слоя — [example/](example/): `yarn gallery` запускает её в Vite, `yarn gallery:build`
 собирает (так её проверяет CI).
 
+## Документация
+
+Сайт документации — [docs/](docs/): введение, установка для веба и лаунчера, цвета, токены, правило скругления и
+страница на каждый компонент — живые примеры, их код и свойства для веба и React Native. `yarn docs` запускает его
+в Vite, `yarn docs:build` собирает статический сайт в `docs/dist` (открывается с любого адреса).
+
+Таблицы свойств собираются из типов kit (`docs/props-plugin.ts`): описание свойства — его JSDoc в исходниках.
+Страница компонента — папка `docs/src/components/<имя>/`: `page.tsx` с описанием и примеры `*.example.tsx`,
+код которых показывается на странице как есть.
+
 ## Подключение
 
 В лаунчере — сабмодулем `uikit/` и `"@tugen/uikit": "link:./uikit"` в package.json; в остальных
@@ -192,4 +202,5 @@ yarn install
 yarn typecheck
 yarn test       # компоненты лаунчера (через react-native-web в jsdom) и веб-слоя (React DOM)
 yarn gallery    # витрина веб-слоя в браузере (Vite)
+yarn docs       # сайт документации (Vite)
 ```

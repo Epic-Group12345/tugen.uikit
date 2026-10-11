@@ -1,28 +1,58 @@
 import type { Page } from '../registry';
+import { Resources } from './resources';
 import { Intro } from './intro';
+import { Colors } from './colors';
+import { Typography } from './typography';
+import { RadiusRule } from './radius';
+import { Branding } from './branding';
+import { Spacing } from './spacing';
+import { Tokens } from './tokens';
 import { Web } from './web';
 import { Native } from './native';
-import { Tokens } from './tokens';
-import { Colors } from './colors';
-import { RadiusRule } from './radius';
 
-// Руководства — по порядку чтения; страницы компонентов идут за ними (registry.ts)
+// Руководства — по порядку чтения внутри раздела; страницы компонентов идут за ними (registry.ts).
+// Раздел «Общее» повторяет состав дизайна Gravity UI: ресурсы, основы, цвета, типографика, скругления,
+// брендирование, сетка и отступы
 
 export const guides: Page[] = [
-  { path: '', title: 'Введение', section: 'Начало', guide: Intro },
-  { path: 'web', title: 'Веб: Vite + React', section: 'Начало', guide: Web },
+  { path: '', title: 'Ресурсы', section: 'Общее', guide: Resources },
+  { path: 'basics', title: 'Основы', section: 'Общее', guide: Intro },
+  { path: 'colors', title: 'Цвета', section: 'Общее', guide: Colors },
+  {
+    path: 'typography',
+    title: 'Типографика',
+    section: 'Общее',
+    guide: Typography,
+  },
+  {
+    path: 'radius',
+    title: 'Радиус скругления',
+    section: 'Общее',
+    guide: RadiusRule,
+  },
+  {
+    path: 'branding',
+    title: 'Брендирование',
+    section: 'Общее',
+    guide: Branding,
+  },
+  {
+    path: 'spacing',
+    title: 'Сетка и отступы',
+    section: 'Общее',
+    guide: Spacing,
+  },
+  { path: 'tokens', title: 'Токены', section: 'Общее', guide: Tokens },
+  {
+    path: 'web',
+    title: 'Веб: Vite + React',
+    section: 'Разработка',
+    guide: Web,
+  },
   {
     path: 'native',
     title: 'Лаунчер: React Native',
-    section: 'Начало',
+    section: 'Разработка',
     guide: Native,
   },
-  { path: 'colors', title: 'Цвета и тема', section: 'Основы', guide: Colors },
-  {
-    path: 'radius',
-    title: 'Правило скругления',
-    section: 'Основы',
-    guide: RadiusRule,
-  },
-  { path: 'tokens', title: 'Токены', section: 'Основы', guide: Tokens },
 ];

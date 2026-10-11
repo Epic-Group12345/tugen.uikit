@@ -83,7 +83,7 @@ export const App = () => {
       По умолчанию тема — как в системе (<C>prefers-color-scheme</C>). Чтобы
       задать её явно, вызовите <C>setTheme</C>: он ставит класс <C>dark</C> или{' '}
       <C>light</C> на <C>&lt;html&gt;</C>. Классы <C>dark:</C> в компонентах те
-      же, что в лаунчере. Подробнее — <A href={href('colors')}>Цвета и тема</A>.
+      же, что в лаунчере. Подробнее — <A href={href('colors')}>Цвета</A>.
     </P>
     <Code
       language="ts"

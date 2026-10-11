@@ -13,13 +13,13 @@ const slug = (text: React.ReactNode) =>
     : undefined;
 
 export const H1: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <h1 className="text-3xl font-semibold tracking-tight text-mist-950 dark:text-mist-50">
+  <h1 className="text-4xl font-bold tracking-tight text-mist-950 sm:text-5xl dark:text-mist-50">
     {children}
   </h1>
 );
 
 export const Lead: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <p className="mt-3 text-lg leading-8 text-mist-700 dark:text-mist-300">
+  <p className="mt-4 text-lg leading-8 text-mist-700 dark:text-mist-300">
     {children}
   </p>
 );
@@ -30,14 +30,14 @@ export const H2: React.FC<{ children: React.ReactNode; id?: string }> = ({
 }) => (
   <h2
     id={id}
-    className="mt-12 mb-4 text-xl font-semibold tracking-tight text-mist-950 dark:text-mist-50"
+    className="mt-14 mb-4 text-2xl font-semibold tracking-tight text-mist-950 dark:text-mist-50"
   >
     {children}
   </h2>
 );
 
 export const H3: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <h3 className="mt-8 mb-3 text-base font-semibold text-mist-950 dark:text-mist-50">
+  <h3 className="mt-8 mb-3 text-lg font-semibold text-mist-950 dark:text-mist-50">
     {children}
   </h3>
 );

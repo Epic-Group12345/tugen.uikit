@@ -3,6 +3,13 @@
 @import '../../src/web/tugen.css';
 @source "./";
 
+/* Шрифты сайта вместо Segoe UI и Consolas kit — как в tugen.webservices (файлы подключает main.tsx) */
+@theme {
+  --font-sans: 'Ubuntu Sans Variable', 'Segoe UI', system-ui, -apple-system,
+    sans-serif;
+  --font-mono: 'Ubuntu Mono', Consolas, ui-monospace, monospace;
+}
+
 body {
   @apply bg-mist-50 dark:bg-mist-950 text-mist-950 dark:text-mist-50 font-sans antialiased;
 }

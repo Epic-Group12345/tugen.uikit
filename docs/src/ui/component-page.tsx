@@ -1,12 +1,12 @@
 import React from 'react';
-import { Pill } from '@tugen/uikit/web';
 import { example, type ComponentDoc } from '../registry';
 import { Demo } from './demo';
 import { PropsTable } from './props-table';
 import { Code } from './code';
 import { H1, H2, Lead, P } from './prose';
 
-// Страница компонента: описание, живые примеры с кодом, советы, отличия в лаунчере и свойства
+// Страница компонента — как гайд компонента у Gravity UI: описание, живые примеры с кодом, рекомендации,
+// отличия в лаунчере и свойства. Подпись «Компоненты • группа» над заголовком ставит каркас (app.tsx)
 
 export const ComponentPage: React.FC<{ slug: string; doc: ComponentDoc }> = ({
   slug,
@@ -22,12 +22,7 @@ export const ComponentPage: React.FC<{ slug: string; doc: ComponentDoc }> = ({
       : `import { ${names} } from '@tugen/uikit/web';`;
   return (
     <article>
-      <div className="flex flex-row flex-wrap items-center gap-2">
-        <Pill tone="neutral">{doc.group}</Pill>
-      </div>
-      <div className="mt-3">
-        <H1>{doc.title}</H1>
-      </div>
+      <H1>{doc.title}</H1>
       <Lead>{doc.lead}</Lead>
       <Code code={imports} language="ts" />
 
@@ -50,7 +45,7 @@ export const ComponentPage: React.FC<{ slug: string; doc: ComponentDoc }> = ({
 
       {doc.usage && (
         <section>
-          <H2 id="usage">Как пользоваться</H2>
+          <H2 id="usage">Рекомендации</H2>
           {doc.usage}
         </section>
       )}

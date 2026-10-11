@@ -25,7 +25,7 @@ const ROLE_ROWS = (Object.keys(themes.light) as ColorRole[]).map(role => [
 
 export const Colors: React.FC = () => (
   <article>
-    <H1>Цвета и тема</H1>
+    <H1>Цвета</H1>
     <Lead>
       Серая шкала <C>mist</C>, один акцентный синий и несколько смысловых
       цветов. Каждый цвет задаётся парой — для светлой и тёмной темы.

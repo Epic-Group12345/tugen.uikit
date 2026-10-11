@@ -42,10 +42,17 @@ export interface Example {
   code: string;
 }
 
+/** Разделы боковой навигации — как у Gravity UI: «Общее» (дизайн), разработка, компоненты */
+export const SECTIONS = ['Общее', 'Разработка', 'Компоненты'] as const;
+
+export type Section = (typeof SECTIONS)[number];
+
 export interface Page {
   path: string;
   title: string;
-  section: string;
+  section: Section;
+  /** Подпись над заголовком вместо раздела: у компонентов — их группа */
+  kicker?: string;
   /** Руководство — свой компонент, страница компонента — описание */
   guide?: React.ComponentType;
   doc?: ComponentDoc;
@@ -78,18 +85,24 @@ const componentPages: Page[] = Object.entries(docs)
   .map(([file, doc]) => ({
     path: `components/${slugOf(file)}`,
     title: doc.title,
-    section: doc.group,
+    section: 'Компоненты' as const,
+    kicker: doc.group,
     doc,
   }))
-  .sort(
-    (a, b) =>
-      GROUPS.indexOf(a.section as Group) - GROUPS.indexOf(b.section as Group) ||
-      a.title.localeCompare(b.title),
-  );
+  // Компоненты — одним списком по алфавиту, как в навигации Gravity UI; группа — подпись на странице
+  .sort((a, b) => a.title.localeCompare(b.title));
 
-export const pages: Page[] = [...guides, ...componentPages];
+// Порядок чтения: руководства по разделам, затем компоненты — по нему же идут ссылки «Назад / Далее»
+export const pages: Page[] = [
+  ...SECTIONS.flatMap(section =>
+    guides.filter(page => page.section === section),
+  ),
+  ...componentPages,
+];
 
-export const sections = [...new Set(pages.map(page => page.section))];
+/** Первая страница раздела — для вкладок в шапке */
+export const sectionStart = (section: Section) =>
+  pages.find(page => page.section === section) ?? pages[0];
 
 export const findPage = (path: string) =>
   pages.find(page => page.path === path) ?? pages[0];

@@ -23,6 +23,23 @@ export interface ExampleDoc {
   text?: React.ReactNode;
 }
 
+/**
+ * Правила компонента в духе гайдов Gravity UI: когда брать и когда нет, из чего состоит, какие
+ * бывают состояния, как писать тексты. Строки — обычный текст, `код` в обратных кавычках
+ */
+export interface ComponentRules {
+  /** Когда брать */
+  use?: string[];
+  /** Когда не брать — и что взять вместо */
+  avoid?: string[];
+  /** Части компонента по порядку; необязательные — с пометкой */
+  anatomy?: string[];
+  /** Состояние и что оно значит */
+  states?: [string, string][];
+  /** Написание текстов: подписи, заголовки, сообщения */
+  writing?: string[];
+}
+
 export interface ComponentDoc {
   title: string;
   group: Group;
@@ -31,7 +48,9 @@ export interface ComponentDoc {
   /** Компоненты для таблиц свойств, главный — первым */
   components: string[];
   examples: ExampleDoc[];
-  /** Советы: когда брать, чего избегать */
+  /** Правила: когда брать, анатомия, состояния, тексты */
+  rules?: ComponentRules;
+  /** Советы по использованию */
   usage?: React.ReactNode;
   /** Чем отличается в React Native (лаунчер) */
   native?: React.ReactNode;

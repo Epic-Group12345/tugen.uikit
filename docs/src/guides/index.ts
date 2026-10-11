@@ -1,6 +1,7 @@
 import type { Page } from '../registry';
 import { Resources } from './resources';
 import { Intro } from './intro';
+import { Rules } from './rules';
 import { Colors } from './colors';
 import { Typography } from './typography';
 import { RadiusRule } from './radius';
@@ -17,6 +18,12 @@ import { Native } from './native';
 export const guides: Page[] = [
   { path: '', title: 'Ресурсы', section: 'Общее', guide: Resources },
   { path: 'basics', title: 'Основы', section: 'Общее', guide: Intro },
+  {
+    path: 'rules',
+    title: 'Правила интерфейса',
+    section: 'Общее',
+    guide: Rules,
+  },
   { path: 'colors', title: 'Цвета', section: 'Общее', guide: Colors },
   {
     path: 'typography',

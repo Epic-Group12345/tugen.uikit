@@ -1,4 +1,5 @@
 import { readdirSync } from 'node:fs';
+import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { withCustomConfig, type PropItem } from 'react-docgen-typescript';
 import type { Plugin } from 'vite';
@@ -24,11 +25,19 @@ export interface ComponentProps {
 
 export type PropsLibrary = Record<string, ComponentProps>;
 
-// Свойства из DOM, React и примитивов не показываем: их сотни, а описаны они у себя
+// Свойства из DOM, React и примитивов не показываем: их сотни, а описаны они у себя. Свои — объявленные
+// в файлах kit. Путь считаем от папки kit, а не ищем в нём node_modules: сайт веба (tugen.webservices)
+// собирает документацию из пакета, и тогда сам kit лежит в node_modules. Пути docgen — от родителя папки
+// запуска, вместе с её именем (trimFileName в react-docgen-typescript)
+const inKit = (file: string) => {
+  const path = relative(root, resolve(dirname(process.cwd()), file));
+  return !path.startsWith('..') && !path.includes('node_modules');
+};
+
 const own = (prop: PropItem) =>
   !prop.declarations?.length
-    ? !prop.parent?.fileName.includes('node_modules')
-    : prop.declarations.some(d => !d.fileName.includes('node_modules'));
+    ? !!prop.parent && inKit(prop.parent.fileName)
+    : prop.declarations.some(d => inKit(d.fileName));
 
 const typeOf = (prop: PropItem) => {
   const { type } = prop;

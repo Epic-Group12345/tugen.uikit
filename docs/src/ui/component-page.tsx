@@ -4,9 +4,11 @@ import { Demo } from './demo';
 import { PropsTable } from './props-table';
 import { Code } from './code';
 import { H1, H2, Lead, P } from './prose';
+import { Anatomy, Guidelines, States, WhenToUse } from './rules';
 
-// Страница компонента — как гайд компонента у Gravity UI: описание, живые примеры с кодом, рекомендации,
-// отличия в лаунчере и свойства. Подпись «Компоненты • группа» над заголовком ставит каркас (app.tsx)
+// Страница компонента — как гайд компонента у Gravity UI: описание, когда использовать, живые примеры
+// с кодом, анатомия, состояния, рекомендации и тексты, отличия в лаунчере и свойства. Подпись
+// «Компоненты • группа» над заголовком ставит каркас (app.tsx)
 
 export const ComponentPage: React.FC<{ slug: string; doc: ComponentDoc }> = ({
   slug,
@@ -25,6 +27,7 @@ export const ComponentPage: React.FC<{ slug: string; doc: ComponentDoc }> = ({
       <H1>{doc.title}</H1>
       <Lead>{doc.lead}</Lead>
       <Code code={imports} language="ts" />
+      {doc.rules && <WhenToUse rules={doc.rules} />}
 
       {doc.examples.map(item => {
         const found = example(slug, item.id);
@@ -43,12 +46,9 @@ export const ComponentPage: React.FC<{ slug: string; doc: ComponentDoc }> = ({
         );
       })}
 
-      {doc.usage && (
-        <section>
-          <H2 id="usage">Рекомендации</H2>
-          {doc.usage}
-        </section>
-      )}
+      {doc.rules?.anatomy && <Anatomy items={doc.rules.anatomy} />}
+      {doc.rules?.states && <States items={doc.rules.states} />}
+      <Guidelines usage={doc.usage} writing={doc.rules?.writing} />
 
       {doc.native && (
         <section>

@@ -2,13 +2,13 @@ import { useState } from 'react';
 import {
   Button,
   Field,
+  Icons,
   Popover,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
   TextField,
 } from '@tugen/uikit/web';
-import { Plus } from 'lucide-react';
 
 export default function Example() {
   const [open, setOpen] = useState(false);
@@ -20,7 +20,7 @@ export default function Example() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button icon={Plus}>Добавить сервер</Button>
+        <Button icon={Icons.Plus}>Добавить сервер</Button>
       </PopoverTrigger>
       <PopoverContent className="w-72">
         <PopoverBody>

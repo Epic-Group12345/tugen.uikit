@@ -1,6 +1,5 @@
 import React from 'react';
-import { cx } from '@tugen/uikit/web';
-import { Check, X } from 'lucide-react';
+import { Icons, cx } from '@tugen/uikit/web';
 import type { ComponentRules } from '../registry';
 import { C, H2, H3, Li, Table, Ul } from './prose';
 
@@ -26,13 +25,13 @@ const WHEN = {
   use: {
     title: 'Когда использовать',
     bar: 'bg-green-600',
-    icon: Check,
+    icon: Icons.Check,
     iconClass: 'text-green-600 dark:text-green-400',
   },
   avoid: {
     title: 'Когда не использовать',
     bar: 'bg-red-600',
-    icon: X,
+    icon: Icons.Xmark,
     iconClass: 'text-red-600 dark:text-red-400',
   },
 } as const;

@@ -1,5 +1,4 @@
-import { Button, Surface, Text } from '@tugen/uikit/web';
-import { Play } from 'lucide-react';
+import { Button, Icons, Surface, Text } from '@tugen/uikit/web';
 
 export default function Example() {
   return (
@@ -15,7 +14,7 @@ export default function Example() {
           Fabric · 42 мода · 1,3 ГБ
         </Text>
       </Surface>
-      <Button variant="play" size="lg" icon={Play} grow>
+      <Button variant="play" size="lg" icon={Icons.Play} grow>
         Играть
       </Button>
     </Surface>

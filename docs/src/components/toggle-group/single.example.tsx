@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { ToggleGroup, ToggleGroupItem } from '@tugen/uikit/web';
-import { LayoutGrid, List, Rows3 } from 'lucide-react';
+import { Icons, ToggleGroup, ToggleGroupItem } from '@tugen/uikit/web';
 
 export default function Example() {
   const [view, setView] = useState<string | undefined>('grid');
@@ -13,10 +12,10 @@ export default function Example() {
         onValueChange={setView}
         aria-label="Вид списка миров"
       >
-        <ToggleGroupItem value="grid" icon={LayoutGrid}>
+        <ToggleGroupItem value="grid" icon={Icons.LayoutCellsLarge}>
           Плитка
         </ToggleGroupItem>
-        <ToggleGroupItem value="list" icon={List}>
+        <ToggleGroupItem value="list" icon={Icons.ListUl}>
           Список
         </ToggleGroupItem>
       </ToggleGroup>
@@ -26,9 +25,17 @@ export default function Example() {
         onValueChange={setView}
         aria-label="Вид списка миров"
       >
-        <ToggleGroupItem value="grid" icon={LayoutGrid} aria-label="Плитка" />
-        <ToggleGroupItem value="list" icon={List} aria-label="Список" />
-        <ToggleGroupItem value="rows" icon={Rows3} aria-label="Строки" />
+        <ToggleGroupItem
+          value="grid"
+          icon={Icons.LayoutCellsLarge}
+          aria-label="Плитка"
+        />
+        <ToggleGroupItem value="list" icon={Icons.ListUl} aria-label="Список" />
+        <ToggleGroupItem
+          value="rows"
+          icon={Icons.LayoutRows3}
+          aria-label="Строки"
+        />
       </ToggleGroup>
     </div>
   );

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Surface, cx } from '@tugen/uikit/web';
-import { Check, X } from 'lucide-react';
+import { Icons, Surface, cx } from '@tugen/uikit/web';
 
 // Блоки страниц раздела «Общее» в духе дизайн-сайта Gravity UI: подпись «Раздел • Страница» над
 // заголовком, крупные карточки ресурсов с превью, нумерованные шаги, правила «так / не так»
@@ -78,13 +77,13 @@ const RULE_TONE = {
     bar: 'bg-green-600',
     text: 'text-green-700 dark:text-green-400',
     label: 'Так',
-    icon: Check,
+    icon: Icons.Check,
   },
   dont: {
     bar: 'bg-red-600',
     text: 'text-red-700 dark:text-red-400',
     label: 'Не так',
-    icon: X,
+    icon: Icons.Xmark,
   },
 } as const;
 

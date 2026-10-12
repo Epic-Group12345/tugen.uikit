@@ -6,6 +6,11 @@ export * from '../radius';
 export type { IconComponent } from '../components/icon';
 export { cx } from './cx';
 export { setTheme, type WebTheme } from './theme';
+
+// Иконки — набор Gravity UI: Icons.Gear, каталог для поиска — ICON_CATALOG
+export * as Icons from './icons';
+export { ICON_CATALOG } from './icon-catalog';
+export type { IconInfo, IconName, IconProps, WebIcon } from './glyph';
 export * from './text';
 export * from './button';
 export * from './surfaces';

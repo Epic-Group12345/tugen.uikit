@@ -59,7 +59,7 @@ body {
 
     <H2>Первый экран</H2>
     <Code
-      code={`import { Button, Row, Section, Toaster, Toggle } from '@tugen/uikit/web';
+      code={`import { Button, Icons, Row, Section, Toaster, Toggle } from '@tugen/uikit/web';
 
 export const App = () => {
   const [music, setMusic] = useState(true);
@@ -128,15 +128,17 @@ setTheme('dark');   // 'light' | 'dark' | 'system'`}
 
     <H2>Иконки</H2>
     <P>
-      Kit не навязывает набор иконок. Свойство <C>icon</C> принимает любой
-      компонент со свойствами <C>size</C> и <C>className</C> — например, иконки
-      lucide-react, как на этом сайте. Цвет иконки задаёт класс <C>text-*</C>,
-      который передаёт сам элемент, поэтому он совпадает с цветом текста рядом.
+      Иконки — набор kit, Gravity UI Icons: <C>Icons.&lt;Имя&gt;</C> из{' '}
+      <C>@tugen/uikit/web</C>. Свойство <C>icon</C> принимает и свой компонент
+      со свойствами <C>size</C> и <C>className</C> — например, знак бренда,
+      которого нет в наборе. Цвет иконки задаёт класс <C>text-*</C>, который
+      передаёт сам элемент, поэтому он совпадает с цветом текста рядом. Все
+      иконки с поиском — на странице <A href={href('icons')}>Иконки</A>.
     </P>
     <Code
-      code={`import { Download } from 'lucide-react';
+      code={`import { Button, Icons } from '@tugen/uikit/web';
 
-<Button icon={Download}>Скачать</Button>`}
+<Button icon={Icons.ArrowDownToLine}>Скачать</Button>`}
     />
   </article>
 );

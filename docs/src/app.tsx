@@ -2,26 +2,18 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   Button,
   IconButton,
-  ToggleGroup,
-  ToggleGroupItem,
+  Icons,
   Sheet,
   SheetContent,
   SheetTitle,
   TextField,
   Toaster,
+  ToggleGroup,
+  ToggleGroupItem,
+  type WebTheme,
   cx,
   setTheme,
-  type WebTheme,
 } from '@tugen/uikit/web';
-import {
-  ArrowLeft,
-  ArrowRight,
-  Menu,
-  Monitor,
-  Moon,
-  Search,
-  Sun,
-} from 'lucide-react';
 import {
   SECTIONS,
   findPage,
@@ -60,9 +52,9 @@ const readTheme = (): WebTheme => {
 };
 
 const THEMES = [
-  { value: 'light', label: 'Светлая', icon: Sun },
-  { value: 'system', label: 'Как в системе', icon: Monitor },
-  { value: 'dark', label: 'Тёмная', icon: Moon },
+  { value: 'light', label: 'Светлая', icon: Icons.Sun },
+  { value: 'system', label: 'Как в системе', icon: Icons.Display },
+  { value: 'dark', label: 'Тёмная', icon: Icons.Moon },
 ] as const;
 
 const ThemeSwitch: React.FC = () => {
@@ -112,7 +104,7 @@ const Nav: React.FC<{ route: string; onNavigate?: () => void }> = ({
       <TextField
         value={query}
         onChangeText={setQuery}
-        icon={Search}
+        icon={Icons.Magnifier}
         type="search"
         placeholder="Найти"
         aria-label="Найти страницу"
@@ -169,7 +161,7 @@ const Pager: React.FC<{ page: Page }> = ({ page }) => {
           className="group flex flex-1 flex-col items-start gap-1"
         >
           <span className="flex flex-row items-center gap-1.5 text-sm text-mist-500 dark:text-mist-400">
-            <ArrowLeft size={14} /> Назад
+            <Icons.ArrowLeft size={14} /> Назад
           </span>
           <span className="text-lg font-semibold text-mist-950 group-hover:text-blue-600 sm:text-xl dark:text-mist-50 dark:group-hover:text-blue-400">
             {prev.title}
@@ -182,7 +174,7 @@ const Pager: React.FC<{ page: Page }> = ({ page }) => {
           className="group flex flex-1 flex-col items-end gap-1 text-right"
         >
           <span className="flex flex-row items-center gap-1.5 text-sm text-mist-500 dark:text-mist-400">
-            Далее <ArrowRight size={14} />
+            Далее <Icons.ArrowRight size={14} />
           </span>
           <span className="text-lg font-semibold text-mist-950 group-hover:text-blue-600 sm:text-xl dark:text-mist-50 dark:group-hover:text-blue-400">
             {next.title}
@@ -268,7 +260,7 @@ export const App: React.FC = () => {
         <div className="mx-auto flex h-14 max-w-7xl flex-row items-center gap-3 px-4">
           <div className="lg:hidden">
             <IconButton
-              icon={Menu}
+              icon={Icons.Bars}
               aria-label="Разделы"
               onClick={() => setMenu(true)}
             />

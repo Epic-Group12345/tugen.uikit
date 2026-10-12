@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, cx, palette } from '@tugen/uikit/web';
-import { Download } from 'lucide-react';
+import { Button, Icons, cx, palette } from '@tugen/uikit/web';
 import { href } from '../router';
 import { Rule, download } from '../ui/blocks';
 import { Logo, Mark, logoSvg, markSvg, type LogoTone } from '../ui/logo';
@@ -97,7 +96,7 @@ export const Branding: React.FC = () => (
             <Button
               size="sm"
               variant="secondary"
-              icon={Download}
+              icon={Icons.ArrowDownToLine}
               onClick={() =>
                 download(
                   `tugen-logo-${item.tone}.svg`,
@@ -111,7 +110,7 @@ export const Branding: React.FC = () => (
             <Button
               size="sm"
               variant="ghost"
-              icon={Download}
+              icon={Icons.ArrowDownToLine}
               onClick={() =>
                 download(
                   `tugen-mark-${item.tone}.svg`,

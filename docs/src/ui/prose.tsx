@@ -1,6 +1,5 @@
 import React from 'react';
-import { Alert, cx } from '@tugen/uikit/web';
-import { Info, TriangleAlert } from 'lucide-react';
+import { Alert, Icons, cx } from '@tugen/uikit/web';
 
 // Текст руководств и страниц компонентов. Оформление сайта, не kit: абзацы длиннее, чем в интерфейсе
 
@@ -96,7 +95,7 @@ export const Note: React.FC<{
   <div className="my-5 flex flex-col">
     <Alert
       tone={tone}
-      icon={tone === 'info' ? Info : TriangleAlert}
+      icon={tone === 'info' ? Icons.CircleInfo : Icons.TriangleExclamation}
       title={title}
     >
       <div className="text-sm leading-6">{children}</div>

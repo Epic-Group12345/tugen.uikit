@@ -10,9 +10,10 @@ import { Spacing } from './spacing';
 import { Tokens } from './tokens';
 import { Web } from './web';
 import { Native } from './native';
+import { IconsGuide } from './icons';
 
 // Руководства — по порядку чтения внутри раздела; страницы компонентов идут за ними (registry.ts).
-// Раздел «Общее» повторяет состав дизайна Gravity UI: ресурсы, основы, цвета, типографика, скругления,
+// Раздел «Общее» повторяет состав дизайна Gravity UI: ресурсы, основы, цвета, типографика, иконки, скругления,
 // брендирование, сетка и отступы
 
 export const guides: Page[] = [
@@ -31,6 +32,7 @@ export const guides: Page[] = [
     section: 'Общее',
     guide: Typography,
   },
+  { path: 'icons', title: 'Иконки', section: 'Общее', guide: IconsGuide },
   {
     path: 'radius',
     title: 'Радиус скругления',

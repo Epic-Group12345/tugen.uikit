@@ -1,16 +1,16 @@
 import {
   Button,
+  Icons,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@tugen/uikit/web';
-import { Play } from 'lucide-react';
 
 export default function Example() {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button variant="play" icon={Play}>
+        <Button variant="play" icon={Icons.Play}>
           Играть
         </Button>
       </TooltipTrigger>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../../../src/web/button';
+import * as Icons from '../../../src/web/icons';
 import { Checkbox } from '../../../src/web/checkbox';
 import { CheckRow, Segmented, Slider, Toggle } from '../../../src/web/controls';
 import { Field } from '../../../src/web/field';
@@ -18,7 +19,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from '../../../src/web/toggle-group';
-import { Block, Dot, Line } from './shared';
+import { Block, Line } from './shared';
 
 const THEMES = [
   { value: 'system', label: 'Системная' },
@@ -129,13 +130,17 @@ export const Forms: React.FC = () => {
             onValueChange={setAlign}
             aria-label="Выравнивание"
           >
-            <ToggleGroupItem value="left" icon={Dot}>
+            <ToggleGroupItem value="left" icon={Icons.TextAlignLeft}>
               Слева
             </ToggleGroupItem>
-            <ToggleGroupItem value="center" icon={Dot}>
+            <ToggleGroupItem value="center" icon={Icons.TextAlignCenter}>
               По центру
             </ToggleGroupItem>
-            <ToggleGroupItem value="right" icon={Dot} aria-label="Справа" />
+            <ToggleGroupItem
+              value="right"
+              icon={Icons.TextAlignRight}
+              aria-label="Справа"
+            />
           </ToggleGroup>
           <ToggleGroup
             type="multiple"
@@ -162,13 +167,17 @@ export const Forms: React.FC = () => {
           </ToggleGroup>
         </Line>
         <Line>
-          <ToggleButton pressed={pinned} onPressedChange={setPinned} icon={Dot}>
+          <ToggleButton
+            pressed={pinned}
+            onPressedChange={setPinned}
+            icon={Icons.Pin}
+          >
             {pinned ? 'Закреплено' : 'Закрепить'}
           </ToggleButton>
           <ToggleButton
             pressed={pinned}
             onPressedChange={setPinned}
-            icon={Dot}
+            icon={Icons.Pin}
             aria-label="Закрепить"
           />
           <ToggleButton pressed={false} onPressedChange={() => {}} disabled>
@@ -294,7 +303,7 @@ export const Forms: React.FC = () => {
         <TextField
           value={search}
           onChangeText={setSearch}
-          icon={Dot}
+          icon={Icons.Magnifier}
           type="search"
           placeholder="Поиск модов"
           aria-label="Поиск модов"

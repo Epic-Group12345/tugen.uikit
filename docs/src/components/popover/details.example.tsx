@@ -1,18 +1,18 @@
 import {
   Button,
+  Icons,
   Popover,
   PopoverBody,
   PopoverContent,
   PopoverRow,
   PopoverTrigger,
 } from '@tugen/uikit/web';
-import { FolderOpen, Info } from 'lucide-react';
 
 export default function Example() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="secondary" icon={Info}>
+        <Button variant="secondary" icon={Icons.CircleInfo}>
           О сборке
         </Button>
       </PopoverTrigger>
@@ -22,7 +22,7 @@ export default function Example() {
           <PopoverRow label="Загрузчик" value="Fabric 0.16.9" />
           <PopoverRow label="Модов" value="42" />
         </PopoverBody>
-        <Button variant="secondary" icon={FolderOpen} grow>
+        <Button variant="secondary" icon={Icons.FolderOpen} grow>
           Открыть папку
         </Button>
       </PopoverContent>

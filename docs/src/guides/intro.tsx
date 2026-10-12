@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, Surface, Text, Toggle } from '@tugen/uikit/web';
-import { Play } from 'lucide-react';
+import { Button, Icons, Surface, Text, Toggle } from '@tugen/uikit/web';
 import { href } from '../router';
 import { Code } from '../ui/code';
 import { A, C, H1, H2, Lead, Li, P, Table, Ul } from '../ui/prose';
@@ -26,7 +25,12 @@ const Hero: React.FC = () => {
         <Text size="lg" weight="semibold">
           Сборка готова к запуску
         </Text>
-        <Button variant="play" size="lg" icon={Play} className="self-start">
+        <Button
+          variant="play"
+          size="lg"
+          icon={Icons.Play}
+          className="self-start"
+        >
           Играть
         </Button>
       </Surface>

@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Segmented } from '@tugen/uikit/web';
-import { Monitor, Moon, Sun } from 'lucide-react';
+import { Icons, Segmented } from '@tugen/uikit/web';
 
 type Theme = 'system' | 'light' | 'dark';
 
@@ -10,9 +9,9 @@ export default function Example() {
   return (
     <Segmented<Theme>
       options={[
-        { value: 'system', label: 'Системная', icon: Monitor },
-        { value: 'light', label: 'Светлая', icon: Sun },
-        { value: 'dark', label: 'Тёмная', icon: Moon },
+        { value: 'system', label: 'Системная', icon: Icons.Display },
+        { value: 'light', label: 'Светлая', icon: Icons.Sun },
+        { value: 'dark', label: 'Тёмная', icon: Icons.Moon },
       ]}
       value={theme}
       onChange={setTheme}

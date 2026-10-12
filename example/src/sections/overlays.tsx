@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, IconButton, Text } from '../../../src/web';
+import { Button, IconButton, Icons, Text } from '../../../src/web';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -50,7 +50,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '../../../src/web/tooltip';
-import { Block, Dot, Line } from './shared';
+import { Block, Line } from './shared';
 
 const SIDES: { side: SheetSide; label: string }[] = [
   { side: 'right', label: 'Шторка справа' },
@@ -184,7 +184,7 @@ export const Overlays: React.FC = () => (
           <TooltipContent>Подсказка сверху</TooltipContent>
         </Tooltip>
         <Tip label="Настройки" side="bottom">
-          <IconButton icon={Dot} aria-label="Настройки" />
+          <IconButton icon={Icons.Gear} aria-label="Настройки" />
         </Tip>
       </Line>
     </Block>
@@ -197,7 +197,7 @@ export const Overlays: React.FC = () => (
               title: 'Сборка установлена',
               description: 'Fabric 1.21.4 готова к запуску',
               tone: 'success',
-              icon: Dot,
+              icon: Icons.Play,
               action: { label: 'Играть', onPress: () => {} },
             })
           }
@@ -211,7 +211,7 @@ export const Overlays: React.FC = () => (
               title: 'Не удалось скачать файлы',
               description: 'Проверьте подключение к интернету',
               tone: 'danger',
-              icon: Dot,
+              icon: Icons.CircleInfo,
             })
           }
         >

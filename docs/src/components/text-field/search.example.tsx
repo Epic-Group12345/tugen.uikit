@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { IconButton, TextField } from '@tugen/uikit/web';
-import { Search, X } from 'lucide-react';
+import { IconButton, Icons, TextField } from '@tugen/uikit/web';
 
 export default function Example() {
   const [query, setQuery] = useState('sodium');
@@ -9,7 +8,7 @@ export default function Example() {
     <TextField
       value={query}
       onChangeText={setQuery}
-      icon={Search}
+      icon={Icons.Magnifier}
       type="search"
       placeholder="Поиск модов"
       aria-label="Поиск модов"
@@ -17,7 +16,7 @@ export default function Example() {
       trailing={
         query ? (
           <IconButton
-            icon={X}
+            icon={Icons.Xmark}
             aria-label="Очистить"
             onClick={() => setQuery('')}
           />

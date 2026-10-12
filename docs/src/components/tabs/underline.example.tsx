@@ -1,17 +1,22 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@tugen/uikit/web';
-import { FileText, History, Link } from 'lucide-react';
+import {
+  Icons,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@tugen/uikit/web';
 
 export default function Example() {
   return (
     <Tabs defaultValue="overview" className="w-full">
       <TabsList variant="underline" fill aria-label="Страница мода">
-        <TabsTrigger value="overview" icon={FileText}>
+        <TabsTrigger value="overview" icon={Icons.FileText}>
           Обзор
         </TabsTrigger>
-        <TabsTrigger value="versions" icon={History}>
+        <TabsTrigger value="versions" icon={Icons.ClockArrowRotateLeft}>
           Версии
         </TabsTrigger>
-        <TabsTrigger value="dependencies" icon={Link}>
+        <TabsTrigger value="dependencies" icon={Icons.Link}>
           Зависимости
         </TabsTrigger>
       </TabsList>

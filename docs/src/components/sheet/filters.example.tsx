@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   Button,
   CheckRow,
+  Icons,
   Sheet,
   SheetClose,
   SheetContent,
@@ -11,7 +12,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@tugen/uikit/web';
-import { ListFilter } from 'lucide-react';
 
 export default function Example() {
   const [modded, setModded] = useState(true);
@@ -20,7 +20,7 @@ export default function Example() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" icon={ListFilter}>
+        <Button variant="outline" icon={Icons.Funnel}>
           Фильтры
         </Button>
       </SheetTrigger>

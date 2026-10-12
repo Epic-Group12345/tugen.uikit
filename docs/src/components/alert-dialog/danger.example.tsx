@@ -9,14 +9,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   Button,
+  Icons,
 } from '@tugen/uikit/web';
-import { Trash2 } from 'lucide-react';
 
 export default function Example() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="danger" icon={Trash2}>
+        <Button variant="danger" icon={Icons.TrashBin}>
           Удалить сборку
         </Button>
       </AlertDialogTrigger>

@@ -9,8 +9,8 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  Icons,
 } from '@tugen/uikit/web';
-import { SlidersHorizontal } from 'lucide-react';
 
 export default function Example() {
   const [grid, setGrid] = useState(true);
@@ -19,7 +19,7 @@ export default function Example() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" icon={SlidersHorizontal}>
+        <Button variant="outline" icon={Icons.Sliders}>
           Вид
         </Button>
       </DropdownMenuTrigger>

@@ -1,25 +1,15 @@
 import React from 'react';
 import {
   Button,
+  Icons,
   Kbd,
   Pill,
   Surface,
   Text,
   Toggle,
   palette,
+  type IconComponent,
 } from '@tugen/uikit/web';
-import {
-  Bell,
-  Download,
-  ExternalLink,
-  Gamepad2,
-  FolderGit2,
-  Heart,
-  Play,
-  Search,
-  Settings,
-  Users,
-} from 'lucide-react';
 import tokensJson from '../../../tokens/tokens.json?raw';
 import { href } from '../router';
 import { ResourceBlock, Steps, download } from '../ui/blocks';
@@ -36,7 +26,7 @@ const REPO = 'https://github.com/Epic-Group12345/tugen.uikit';
 const LinkButton: React.FC<{
   href: string;
   variant?: 'primary' | 'secondary';
-  icon?: typeof FolderGit2;
+  icon?: IconComponent;
   children: React.ReactNode;
 }> = ({ href: to, variant = 'secondary', icon, children }) => (
   <a
@@ -64,7 +54,7 @@ const KitPreview: React.FC = () => {
           Выживание · 1.21.4
         </Text>
         <div className="flex flex-row gap-2">
-          <Button variant="play" icon={Play} grow>
+          <Button variant="play" icon={Icons.Play} grow>
             Играть
           </Button>
           <Button variant="secondary">Настроить</Button>
@@ -104,7 +94,16 @@ const TokensPreview: React.FC = () => (
   </div>
 );
 
-const ICONS = [Play, Settings, Users, Bell, Search, Heart, Download, Gamepad2];
+const ICONS = [
+  Icons.Play,
+  Icons.Gear,
+  Icons.Persons,
+  Icons.Bell,
+  Icons.Magnifier,
+  Icons.Heart,
+  Icons.ArrowDownToLine,
+  Icons.Cube,
+];
 
 const IconsPreview: React.FC = () => (
   <div className="grid grid-cols-4 gap-3">
@@ -171,7 +170,7 @@ export const Resources: React.FC = () => (
           <LinkButton href={href('components/button')} variant="primary">
             Компоненты
           </LinkButton>
-          <LinkButton href={REPO} icon={FolderGit2}>
+          <LinkButton href={REPO} icon={Icons.CodeFork}>
             GitHub
           </LinkButton>
         </>
@@ -192,7 +191,7 @@ export const Resources: React.FC = () => (
         <>
           <Button
             variant="primary"
-            icon={Download}
+            icon={Icons.ArrowDownToLine}
             onClick={() =>
               download('tokens.json', tokensJson, 'application/json')
             }
@@ -216,20 +215,22 @@ export const Resources: React.FC = () => (
       title="Иконки"
       actions={
         <>
-          <LinkButton href="https://gravity-ui.com/icons" icon={ExternalLink}>
-            Gravity UI Icons
+          <LinkButton href={href('icons')} variant="primary">
+            Все иконки
           </LinkButton>
-          <LinkButton href="https://lucide.dev/icons" icon={ExternalLink}>
-            Lucide
+          <LinkButton
+            href="https://gravity-ui.com/icons"
+            icon={Icons.ArrowUpRightFromSquare}
+          >
+            Gravity UI Icons
           </LinkButton>
         </>
       }
       preview={<IconsPreview />}
     >
       <p>
-        Kit не держит свой набор: иконка — компонент со свойствами <C>size</C> и{' '}
-        <C>className</C>. В лаунчере — Gravity UI Icons, в вебе —{' '}
-        <C>lucide-react</C>. Размеры: 12 — шевроны и крестики, 14 — в кнопках с
+        Один набор для лаунчера и сайтов — Gravity UI Icons, его держит kit:{' '}
+        <C>Icons.Gear</C>. Размеры: 12 — шевроны и крестики, 14 — в кнопках с
         текстом, 16 — кнопки-иконки и пункты меню, 24 — пустые состояния.
       </p>
     </ResourceBlock>
@@ -241,13 +242,13 @@ export const Resources: React.FC = () => (
         <>
           <LinkButton
             href="https://fonts.google.com/specimen/Ubuntu+Sans"
-            icon={ExternalLink}
+            icon={Icons.ArrowUpRightFromSquare}
           >
             Ubuntu Sans
           </LinkButton>
           <LinkButton
             href="https://fonts.google.com/specimen/Ubuntu+Mono"
-            icon={ExternalLink}
+            icon={Icons.ArrowUpRightFromSquare}
           >
             Ubuntu Mono
           </LinkButton>

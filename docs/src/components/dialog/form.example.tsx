@@ -9,9 +9,9 @@ import {
   DialogTitle,
   DialogTrigger,
   Field,
+  Icons,
   TextField,
 } from '@tugen/uikit/web';
-import { Pencil } from 'lucide-react';
 
 export default function Example() {
   const [open, setOpen] = useState(false);
@@ -24,7 +24,7 @@ export default function Example() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" icon={Pencil}>
+        <Button variant="outline" icon={Icons.Pencil}>
           {saved}
         </Button>
       </DialogTrigger>

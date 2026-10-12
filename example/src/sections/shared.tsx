@@ -20,19 +20,3 @@ export const Block: React.FC<{ title: string; children: React.ReactNode }> = ({
 export const Line: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="flex flex-row flex-wrap items-center gap-2">{children}</div>
 );
-
-/** Простая иконка для примеров: kit не навязывает набор, иконка — компонент с size и className */
-export const Dot: React.FC<{ size?: number; className?: string }> = ({
-  size = 16,
-  className,
-}) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 16 16"
-    className={className}
-    aria-hidden
-  >
-    <circle cx="8" cy="8" r="4" fill="currentColor" />
-  </svg>
-);

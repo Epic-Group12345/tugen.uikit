@@ -7,8 +7,9 @@ import {
   Section,
   Surface,
   Text,
+  Icons,
 } from '../../../src/web';
-import { Block, Dot, Line } from './shared';
+import { Block, Line } from './shared';
 
 export const Basics: React.FC = () => (
   <>
@@ -17,14 +18,36 @@ export const Basics: React.FC = () => (
         <Button variant="play" size="lg">
           Играть
         </Button>
-        <Button icon={Dot}>Сохранить</Button>
+        <Button icon={Icons.FloppyDisk}>Сохранить</Button>
         <Button variant="secondary">Отмена</Button>
         <Button variant="outline">Подробнее</Button>
         <Button variant="ghost">Пропустить</Button>
         <Button variant="danger">Удалить</Button>
         <Button disabled>Недоступно</Button>
-        <IconButton icon={Dot} aria-label="Ещё" />
-        <IconButton icon={Dot} aria-label="Завершить" tone="danger" />
+        <IconButton icon={Icons.Ellipsis} aria-label="Ещё" />
+        <IconButton icon={Icons.Stop} aria-label="Завершить" tone="danger" />
+      </Line>
+    </Block>
+    <Block title="Иконки: Gravity UI, Icons.<Имя>">
+      <Line>
+        {[
+          Icons.Play,
+          Icons.Gear,
+          Icons.Persons,
+          Icons.Bell,
+          Icons.Magnifier,
+          Icons.FolderOpen,
+          Icons.ArrowDownToLine,
+          Icons.TrashBin,
+        ].map((Icon, i) => (
+          <Icon
+            key={i}
+            size={16}
+            className="text-mist-700 dark:text-mist-300"
+          />
+        ))}
+        <Icons.StarFill size={24} className="text-amber-500" />
+        <Icons.CircleCheck size={24} className="text-green-600" />
       </Line>
     </Block>
     <Section title="Настройки">

@@ -1,10 +1,9 @@
-import { EmptyState } from '@tugen/uikit/web';
-import { Shirt } from 'lucide-react';
+import { EmptyState, Icons } from '@tugen/uikit/web';
 
 export default function Example() {
   return (
     <EmptyState
-      icon={Shirt}
+      icon={Icons.TShirt}
       title="Скины — скоро"
       text="Здесь можно будет менять скин и плащ, не выходя из лаунчера."
     />

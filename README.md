@@ -3,10 +3,10 @@
 UI-kit TUGEN: визуальный язык лаунчера (`DESIGN.md` в tugen.launcher) одним пакетом для всех частей
 проекта. Две библиотеки в одном пакете — по одной на платформу, с общими токенами и правилом скругления:
 
-| Где                                                 | Что брать                                                  |
-| --------------------------------------------------- | ---------------------------------------------------------- |
+| Где                                                 | Что брать                                                            |
+| --------------------------------------------------- | -------------------------------------------------------------------- |
 | лаунчер (React Native Windows), мини-приложения игр | `@tugen/uikit` — компоненты React Native на @rn-primitives + Uniwind |
-| веб — Vite + React                                  | `@tugen/uikit/web` — компоненты React DOM на Radix + Tailwind |
+| веб — Vite + React                                  | `@tugen/uikit/web` — компоненты React DOM на Radix + Tailwind        |
 
 Имена, варианты, размеры и классы у двух библиотек одни и те же (`Button variant="play"`, `Surface`,
 `DropdownMenu`…), поэтому веб выглядит как лаунчер. Отличаются только соглашения платформы: в вебе — события
@@ -134,10 +134,28 @@ API составной, как в shadcn: `Dialog` + `DialogTrigger` + `DialogCo
 
   Без алиаса всё работает на исходном пакете, с его ограничением.
 
-Иконки kit не навязывает: `icon` — любой компонент с `size` и `className`, то есть `Icons.<Имя>` лаунчера.
-Цвет иконки задаёт класс `text-*`, который передаёт сам элемент, поэтому он совпадает с цветом соседнего
-текста. Нативных модулей лаунчера kit не требует. Анимации — только opacity и transform, на нативном
+Иконки — набор Gravity UI (см. «Иконки» ниже); в лаунчере их рисует свой нативный модуль, `Icons.<Имя>`
+из `components/icons` с теми же именами. `icon` — любой компонент с `size` и `className`. Цвет иконки задаёт
+класс `text-*`, который передаёт сам элемент, поэтому он совпадает с цветом соседнего текста. Нативных модулей лаунчера kit не требует. Анимации — только opacity и transform, на нативном
 драйвере; цвета не анимируются, их меняют слои `StateLayers`.
+
+## Иконки
+
+Kit держит один набор иконок для лаунчера и сайтов — [Gravity UI Icons](https://gravity-ui.com/icons)
+(`@gravity-ui/icons`, © YANDEX LLC, лицензия MIT, текст лицензии — в пакете). В вебе это `Icons.<Имя>` из
+`@tugen/uikit/web`: компонент с `size` (по умолчанию 16) и `className`, подходит в `icon` у элементов kit, а в бандл
+попадают только упомянутые иконки. `ICON_CATALOG` — все иконки с категориями и ключевыми словами Gravity UI, по нему
+ищет страница «Иконки» документации.
+
+```tsx
+import { Button, Icons } from '@tugen/uikit/web';
+
+<Button icon={Icons.ArrowDownToLine}>Скачать</Button>;
+<Icons.TrashBin aria-label="Удалить" />; // иконка без текста — с подписью для диктора
+```
+
+`src/web/icons.ts` и `src/web/icon-catalog.ts` генерирует `yarn icons` из пакета Gravity UI — после обновления его версии
+в `package.json`. Своя иконка, которой нет в наборе (знак бренда), — свой компонент с `size` и `className`.
 
 ## Веб: Vite + React
 
@@ -158,14 +176,24 @@ plugins: [tailwindcss(), react()];
 ```
 
 ```tsx
-import { Button, DropdownMenu, Section, Row, Toggle, Toaster, setTheme } from '@tugen/uikit/web';
+import {
+  Button,
+  DropdownMenu,
+  Section,
+  Row,
+  Toggle,
+  Toaster,
+  setTheme,
+} from '@tugen/uikit/web';
 
 <Section title="Игра">
   <Row title="Музыка" description="Фоновая музыка">
     <Toggle value={music} onChange={setMusic} aria-label="Музыка" />
   </Row>
 </Section>;
-<Button variant="play" onClick={play}>Играть</Button>;
+<Button variant="play" onClick={play}>
+  Играть
+</Button>;
 ```
 
 - **Тема** — как в системе (`prefers-color-scheme`); `setTheme('dark' | 'light' | 'system')` задаёт её явно

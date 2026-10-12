@@ -1,6 +1,5 @@
 import type { Ref } from 'react';
-import { Button, useDropdownMenu } from '@tugen/uikit/web';
-import { FileText, FolderOpen, Trash2 } from 'lucide-react';
+import { Button, Icons, useDropdownMenu } from '@tugen/uikit/web';
 
 export default function Example() {
   const { anchorRef, isOpen, onClick, menu } = useDropdownMenu({
@@ -18,11 +17,11 @@ export default function Example() {
         Файлы сборки
       </Button>
       {menu([
-        { label: 'Открыть папку', icon: FolderOpen, onSelect: () => {} },
-        { label: 'Журнал запуска', icon: FileText, onSelect: () => {} },
+        { label: 'Открыть папку', icon: Icons.FolderOpen, onSelect: () => {} },
+        { label: 'Журнал запуска', icon: Icons.FileText, onSelect: () => {} },
         {
           label: 'Очистить кеш',
-          icon: Trash2,
+          icon: Icons.TrashBin,
           destructive: true,
           onSelect: () => {},
         },

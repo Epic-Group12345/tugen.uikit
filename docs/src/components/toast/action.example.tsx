@@ -1,5 +1,4 @@
-import { Button, toast } from '@tugen/uikit/web';
-import { UserRound } from 'lucide-react';
+import { Button, Icons, toast } from '@tugen/uikit/web';
 
 export default function Example() {
   return (
@@ -9,7 +8,7 @@ export default function Example() {
           toast({
             title: 'Алекс в игре',
             description: 'Сервер «Остров», 3 игрока',
-            icon: UserRound,
+            icon: Icons.Person,
             action: { label: 'Войти', onPress: () => {} },
             duration: Infinity,
           })

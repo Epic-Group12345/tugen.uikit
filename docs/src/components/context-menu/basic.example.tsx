@@ -4,9 +4,9 @@ import {
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
+  Icons,
   Text,
 } from '@tugen/uikit/web';
-import { Copy, FolderOpen, Play, Trash2 } from 'lucide-react';
 
 export default function Example() {
   return (
@@ -20,15 +20,15 @@ export default function Example() {
         </div>
       </ContextMenuTrigger>
       <ContextMenuContent>
-        <ContextMenuItem icon={Play} shortcut="Enter">
+        <ContextMenuItem icon={Icons.Play} shortcut="Enter">
           Играть
         </ContextMenuItem>
-        <ContextMenuItem icon={Copy} shortcut="Ctrl+D">
+        <ContextMenuItem icon={Icons.Copy} shortcut="Ctrl+D">
           Дублировать
         </ContextMenuItem>
-        <ContextMenuItem icon={FolderOpen}>Открыть папку</ContextMenuItem>
+        <ContextMenuItem icon={Icons.FolderOpen}>Открыть папку</ContextMenuItem>
         <ContextMenuSeparator />
-        <ContextMenuItem icon={Trash2} destructive>
+        <ContextMenuItem icon={Icons.TrashBin} destructive>
           Удалить
         </ContextMenuItem>
       </ContextMenuContent>

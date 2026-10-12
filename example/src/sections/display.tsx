@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '../../../src/web/button';
+import * as Icons from '../../../src/web/icons';
 import { Text } from '../../../src/web/text';
 import { Pill } from '../../../src/web/pill';
 import { Skeleton, SkeletonLines } from '../../../src/web/skeleton';
@@ -25,7 +26,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '../../../src/web/collapsible';
-import { Block, Dot, Line } from './shared';
+import { Block, Line } from './shared';
 
 // Картинка аватара без сети: SVG в data-адресе
 const FACE = `data:image/svg+xml;utf8,${encodeURIComponent(
@@ -55,7 +56,7 @@ export const Display: React.FC = () => (
         <Pill>Технические</Pill>
         <Pill tone="amber">Бета</Pill>
         <Pill tone="green">
-          <Dot size={8} />
+          <Icons.CircleFill size={8} />
           <span>Онлайн</span>
         </Pill>
         <Pill tone="red">Несовместим</Pill>
@@ -70,19 +71,23 @@ export const Display: React.FC = () => (
     </Block>
 
     <Block title="Уведомления">
-      <Alert icon={Dot} title="Доступно обновление">
+      <Alert icon={Icons.CircleInfo} title="Доступно обновление">
         TUGEN 1.4 исправляет запуск сборок на Fabric.
       </Alert>
       <Alert
         tone="danger"
-        icon={Dot}
+        icon={Icons.CloudSlash}
         title="Нет связи с сервером"
         action={<Button variant="secondary">Повторить</Button>}
       >
         Проверьте подключение к интернету.
       </Alert>
-      <Alert tone="warning" icon={Dot} title="Мод несовместим" />
-      <Alert tone="success" icon={Dot}>
+      <Alert
+        tone="warning"
+        icon={Icons.TriangleExclamation}
+        title="Мод несовместим"
+      />
+      <Alert tone="success" icon={Icons.CircleCheck}>
         Сборка установлена
       </Alert>
       <Alert tone="neutral">Нейтральное сообщение без заголовка</Alert>
@@ -151,7 +156,7 @@ export const Display: React.FC = () => (
       <Tabs defaultValue="mods">
         <TabsList aria-label="Раздел сборки">
           <TabsTrigger value="mods">Моды</TabsTrigger>
-          <TabsTrigger value="maps" icon={Dot}>
+          <TabsTrigger value="maps" icon={Icons.Globe}>
             Карты
           </TabsTrigger>
           <TabsTrigger value="shaders">Шейдеры</TabsTrigger>
@@ -175,13 +180,13 @@ export const Display: React.FC = () => (
       </Tabs>
       <Tabs defaultValue="home">
         <TabsList orientation="vertical" className="w-40" aria-label="Меню">
-          <TabsTrigger value="home" icon={Dot}>
+          <TabsTrigger value="home" icon={Icons.House}>
             Главная
           </TabsTrigger>
-          <TabsTrigger value="builds" icon={Dot}>
+          <TabsTrigger value="builds" icon={Icons.Box}>
             Сборки
           </TabsTrigger>
-          <TabsTrigger value="chats" icon={Dot}>
+          <TabsTrigger value="chats" icon={Icons.Comments}>
             Чаты
           </TabsTrigger>
         </TabsList>
@@ -203,7 +208,9 @@ export const Display: React.FC = () => (
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="java">
-          <AccordionTrigger icon={Dot}>Нужна ли Java?</AccordionTrigger>
+          <AccordionTrigger icon={Icons.CircleQuestion}>
+            Нужна ли Java?
+          </AccordionTrigger>
           <AccordionContent>Лаунчер скачает нужную сам.</AccordionContent>
         </AccordionItem>
         <AccordionItem value="off" disabled>
@@ -225,7 +232,7 @@ export const Display: React.FC = () => (
 
     <Block title="Раскрывающийся блок">
       <Collapsible>
-        <CollapsibleTrigger icon={Dot}>
+        <CollapsibleTrigger icon={Icons.Sliders}>
           Дополнительные параметры
         </CollapsibleTrigger>
         <CollapsibleContent className="px-3 pb-2">
@@ -248,7 +255,7 @@ export const Display: React.FC = () => (
 
     <Block title="Пустая страница">
       <EmptyState
-        icon={Dot}
+        icon={Icons.Comments}
         title="Чатов пока нет"
         text="Добавьте друга, чтобы начать переписку."
       >

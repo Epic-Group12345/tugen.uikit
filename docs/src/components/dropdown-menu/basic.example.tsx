@@ -9,8 +9,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
+  Icons,
 } from '@tugen/uikit/web';
-import { Copy, FolderOpen, Pencil, Share2, Trash2 } from 'lucide-react';
 
 export default function Example() {
   return (
@@ -20,15 +20,19 @@ export default function Example() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-60">
         <DropdownMenuLabel>Выживание 1.21.4</DropdownMenuLabel>
-        <DropdownMenuItem icon={Pencil} shortcut="Ctrl+E">
+        <DropdownMenuItem icon={Icons.Pencil} shortcut="Ctrl+E">
           Изменить
         </DropdownMenuItem>
-        <DropdownMenuItem icon={Copy} shortcut="Ctrl+D">
+        <DropdownMenuItem icon={Icons.Copy} shortcut="Ctrl+D">
           Дублировать
         </DropdownMenuItem>
-        <DropdownMenuItem icon={FolderOpen}>Открыть папку</DropdownMenuItem>
+        <DropdownMenuItem icon={Icons.FolderOpen}>
+          Открыть папку
+        </DropdownMenuItem>
         <DropdownMenuSub>
-          <DropdownMenuSubTrigger icon={Share2}>Экспорт</DropdownMenuSubTrigger>
+          <DropdownMenuSubTrigger icon={Icons.ArrowUpFromSquare}>
+            Экспорт
+          </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
             <DropdownMenuItem>В файл .zip</DropdownMenuItem>
             <DropdownMenuItem>В Modrinth</DropdownMenuItem>
@@ -36,7 +40,7 @@ export default function Example() {
           </DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
-        <DropdownMenuItem icon={Trash2} destructive>
+        <DropdownMenuItem icon={Icons.TrashBin} destructive>
           Удалить
         </DropdownMenuItem>
       </DropdownMenuContent>

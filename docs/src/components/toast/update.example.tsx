@@ -1,12 +1,11 @@
-import { Button, toast } from '@tugen/uikit/web';
-import { CircleCheck, Download } from 'lucide-react';
+import { Button, Icons, toast } from '@tugen/uikit/web';
 
 export default function Example() {
   const install = () => {
     const id = toast({
       title: 'Скачивание сборки',
       description: 'Осталось 120 МБ',
-      icon: Download,
+      icon: Icons.ArrowDownToLine,
       duration: Infinity,
     });
     setTimeout(() => {
@@ -14,14 +13,14 @@ export default function Example() {
         id,
         title: 'Сборка установлена',
         tone: 'success',
-        icon: CircleCheck,
+        icon: Icons.CircleCheck,
         action: { label: 'Играть', onPress: () => {} },
       });
     }, 2000);
   };
 
   return (
-    <Button icon={Download} onClick={install}>
+    <Button icon={Icons.ArrowDownToLine} onClick={install}>
       Установить
     </Button>
   );

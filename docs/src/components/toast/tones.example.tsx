@@ -1,5 +1,4 @@
-import { Button, toast } from '@tugen/uikit/web';
-import { CircleAlert, CircleCheck, Info, TriangleAlert } from 'lucide-react';
+import { Button, Icons, toast } from '@tugen/uikit/web';
 
 export default function Example() {
   return (
@@ -11,7 +10,7 @@ export default function Example() {
             title: 'Сборка установлена',
             description: 'Fabric 1.21.4 готова к запуску',
             tone: 'success',
-            icon: CircleCheck,
+            icon: Icons.CircleCheck,
           })
         }
       >
@@ -24,7 +23,7 @@ export default function Example() {
             title: 'Доступно обновление',
             description: 'Sodium 0.6.5 для вашей сборки',
             tone: 'info',
-            icon: Info,
+            icon: Icons.CircleInfo,
           })
         }
       >
@@ -37,7 +36,7 @@ export default function Example() {
             title: 'Мало памяти',
             description: 'Сборке выделено меньше 2 ГБ',
             tone: 'warning',
-            icon: TriangleAlert,
+            icon: Icons.TriangleExclamation,
           })
         }
       >
@@ -50,7 +49,7 @@ export default function Example() {
             title: 'Не удалось скачать файлы',
             description: 'Проверьте подключение к интернету',
             tone: 'danger',
-            icon: CircleAlert,
+            icon: Icons.CircleExclamation,
           })
         }
       >

@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { ToggleButton } from '@tugen/uikit/web';
-import { Eye, Pin } from 'lucide-react';
+import { Icons, ToggleButton } from '@tugen/uikit/web';
 
 export default function Example() {
   const [pinned, setPinned] = useState(false);
@@ -8,13 +7,17 @@ export default function Example() {
 
   return (
     <div className="flex flex-row items-center gap-2">
-      <ToggleButton pressed={pinned} onPressedChange={setPinned} icon={Pin}>
+      <ToggleButton
+        pressed={pinned}
+        onPressedChange={setPinned}
+        icon={Icons.Pin}
+      >
         {pinned ? 'Закреплено' : 'Закрепить'}
       </ToggleButton>
       <ToggleButton
         pressed={hidden}
         onPressedChange={setHidden}
-        icon={Eye}
+        icon={Icons.Eye}
         aria-label="Показывать скрытые сборки"
       />
     </div>

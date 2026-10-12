@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../../../src/web/button';
+import * as Icons from '../../../src/web/icons';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -38,7 +39,7 @@ import {
   type SelectValueOption,
 } from '../../../src/web/select';
 import { Text } from '../../../src/web/text';
-import { Block, Dot, Line } from './shared';
+import { Block, Line } from './shared';
 
 const LANGUAGES = [
   { value: 'ru', label: 'Русский' },
@@ -60,14 +61,16 @@ const DropdownExample: React.FC = () => {
       <DropdownMenuContent className="w-60">
         <DropdownMenuLabel>Сборка</DropdownMenuLabel>
         <DropdownMenuGroup>
-          <DropdownMenuItem icon={Dot} shortcut="Ctrl+E">
+          <DropdownMenuItem icon={Icons.Pencil} shortcut="Ctrl+E">
             Изменить
           </DropdownMenuItem>
-          <DropdownMenuItem icon={Dot} shortcut="Ctrl+D">
+          <DropdownMenuItem icon={Icons.Copy} shortcut="Ctrl+D">
             Дублировать
           </DropdownMenuItem>
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger icon={Dot}>Экспорт</DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger icon={Icons.ArrowUpFromSquare}>
+              Экспорт
+            </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               <DropdownMenuItem>В файл .zip</DropdownMenuItem>
               <DropdownMenuItem>В Modrinth</DropdownMenuItem>
@@ -95,7 +98,7 @@ const DropdownExample: React.FC = () => {
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem icon={Dot} destructive>
+        <DropdownMenuItem icon={Icons.TrashBin} destructive>
           Удалить
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -145,8 +148,8 @@ const PopupMenuExample: React.FC = () => {
         useDropdownMenu (по ширине кнопки)
       </Button>
       {menu([
-        { label: 'Открыть папку', icon: Dot, onSelect: () => {} },
-        { label: 'Журнал', icon: Dot, onSelect: () => {} },
+        { label: 'Открыть папку', icon: Icons.FolderOpen, onSelect: () => {} },
+        { label: 'Журнал', icon: Icons.FileText, onSelect: () => {} },
         { label: 'Удалить', destructive: true, onSelect: () => {} },
       ])}
     </>
@@ -161,10 +164,14 @@ export const Menus: React.FC = () => {
         <Line>
           <DropdownExample />
           <Dropdown
-            icon={Dot}
+            icon={Icons.Ellipsis}
             aria-label="Ещё"
             items={[
-              { label: 'Переименовать', icon: Dot, onSelect: () => {} },
+              {
+                label: 'Переименовать',
+                icon: Icons.Pencil,
+                onSelect: () => {},
+              },
               { label: 'Сеткой', selected: true, onSelect: () => {} },
               { label: 'Недоступно', disabled: true, onSelect: () => {} },
               { label: 'Удалить', destructive: true, onSelect: () => {} },

@@ -12,6 +12,7 @@ yarn typecheck
 yarn test
 yarn gallery    # витрина веб-слоя в браузере (Vite); yarn gallery:build — сборка, как в CI
 yarn docs       # сайт документации (Vite); yarn docs:build — сборка, как в CI
+yarn icons      # пересобрать Icons и ICON_CATALOG из @gravity-ui/icons
 npx prettier --check src __tests__ docs/src
 ```
 
@@ -45,6 +46,8 @@ npx prettier --check src __tests__ docs/src
   или классом на `<html>` (`setTheme`).
 - Компоненты не зависят от нативных модулей лаунчера и набора иконок: иконка — проп-компонент
   с `size` и `className`.
+- **Иконки — только Gravity UI** (`@gravity-ui/icons`, MIT): в вебе `Icons.<Имя>` из `src/web/icons.ts`, другие наборы
+  (lucide и пр.) не подключаем. `src/web/icons.ts` и `icon-catalog.ts` генерирует `yarn icons` — руками не правим.
 - Анимации — только opacity и transform: в RN `useNativeDriver: nativeDriver`, цвет меняют слои `StateLayers`;
   в вебе наведение и нажатие — классами `hover:` / `active:`.
 - Доступность — `aria-*` (`aria-checked`, `aria-disabled`): в RN их понимают и Windows, и тесты на

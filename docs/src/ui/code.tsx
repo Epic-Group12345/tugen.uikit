@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Highlight, type PrismTheme } from 'prism-react-renderer';
-import { IconButton, Tip, cx } from '@tugen/uikit/web';
-import { Check, Copy } from 'lucide-react';
+import { IconButton, Icons, Tip, cx } from '@tugen/uikit/web';
 
 // Подсветка кода: цвета — переменные из global.css, поэтому тема сайта меняет и их
 
@@ -53,7 +52,7 @@ export const CopyButton: React.FC<{ text: string }> = ({ text }) => {
   return (
     <Tip label={copied ? 'Скопировано' : 'Копировать'}>
       <IconButton
-        icon={copied ? Check : Copy}
+        icon={copied ? Icons.Check : Icons.Copy}
         tone={copied ? 'success' : 'default'}
         aria-label="Копировать код"
         onClick={copy}

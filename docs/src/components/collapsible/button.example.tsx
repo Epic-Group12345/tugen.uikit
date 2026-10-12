@@ -4,9 +4,9 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
+  Icons,
   Text,
 } from '@tugen/uikit/web';
-import { ScrollText } from 'lucide-react';
 
 export default function Example() {
   const [open, setOpen] = useState(false);
@@ -18,7 +18,11 @@ export default function Example() {
       className="w-full max-w-sm gap-2"
     >
       <CollapsibleTrigger asChild>
-        <Button variant="outline" icon={ScrollText} className="self-start">
+        <Button
+          variant="outline"
+          icon={Icons.SquareArticle}
+          className="self-start"
+        >
           {open ? 'Скрыть журнал' : 'Показать журнал'}
         </Button>
       </CollapsibleTrigger>

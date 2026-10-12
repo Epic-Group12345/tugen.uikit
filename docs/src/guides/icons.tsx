@@ -7,7 +7,7 @@ import {
   Text,
   TextField,
   toast,
-  type IconName,
+  type IconInfo,
 } from '@tugen/uikit/web';
 import { Code } from '../ui/code';
 import { A, C, H1, H2, Lead, P, Table } from '../ui/prose';
@@ -80,8 +80,11 @@ const copy = async (text: string) => {
   }
 };
 
-const IconTile: React.FC<{ name: IconName }> = ({ name }) => {
-  const Icon = Icons[name];
+const IconTile: React.FC<{ icon: IconInfo }> = ({
+  icon: { name, icon: Icon },
+}) => {
+  // Компонент из каталога, а не Icons[name]: обращение по имени к Icons утянуло бы весь набор
+  // в общий чанк сайта, а не только в чанк документации
   return (
     <button
       type="button"
@@ -151,7 +154,7 @@ const Catalog: React.FC = () => {
       {found.length ? (
         <div className="grid grid-cols-3 gap-1 sm:grid-cols-5 lg:grid-cols-6">
           {found.map(icon => (
-            <IconTile key={icon.name} name={icon.name} />
+            <IconTile key={icon.name} icon={icon} />
           ))}
         </div>
       ) : (

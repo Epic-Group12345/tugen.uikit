@@ -26,9 +26,11 @@ export type WebIcon = IconComponent & React.FC<IconProps>;
 /** Имя иконки набора: 'Gear' — то же, что Icons.Gear */
 export type IconName = keyof typeof Icons;
 
-/** Иконка в каталоге: имя (Icons.<имя>), категории и ключевые слова Gravity UI */
+/** Иконка в каталоге: имя (Icons.<имя>), компонент, категории и ключевые слова Gravity UI */
 export interface IconInfo {
   name: IconName;
+  /** Та же иконка, что Icons.<имя> */
+  icon: WebIcon;
   categories: readonly string[];
   keywords: readonly string[];
 }

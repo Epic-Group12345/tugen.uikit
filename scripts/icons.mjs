@@ -34,14 +34,18 @@ ${sorted
 
 const catalog = `${header}
 
-import type { IconInfo } from './glyph';
+import * as G from '@gravity-ui/icons';
+import { glyph, type IconInfo } from './glyph';
 
-/** Все иконки набора: имя (Icons.<имя>), категории и ключевые слова Gravity UI для поиска */
+// Каталог держит свои компоненты, а не Icons: страница со всеми иконками тянет их в свой чанк, а
+// модуль icons.ts в общем чанке приложения остаётся урезанным до используемых иконок
+
+/** Все иконки набора: имя (Icons.<имя>), компонент, категории и ключевые слова Gravity UI для поиска */
 export const ICON_CATALOG: readonly IconInfo[] = [
 ${sorted
   .map(
     i =>
-      `  { name: '${i.componentName}', categories: ${JSON.stringify(
+      `  { name: '${i.componentName}', icon: glyph(G.${i.componentName}), categories: ${JSON.stringify(
         i.categories,
       ).replace(/"/g, "'")}, keywords: ${JSON.stringify(i.keywords).replace(
         /"/g,

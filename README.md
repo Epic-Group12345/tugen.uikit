@@ -59,6 +59,12 @@ API составной, как в shadcn: `Dialog` + `DialogTrigger` + `DialogCo
 | отображение  | `Tabs` (segmented, underline, vertical), `Accordion`, `Collapsible`, `Avatar`, `AvatarGroup`, `Progress`, `Alert`, `Pill`                                                   |
 | уведомления  | `Toaster` + `toast({ title, description, tone, action })`, `toast.dismiss(id)`                                                                                              |
 
+Иконки kit не навязывает: `icon` — любой компонент с `size` и `className`. В интерфейсах TUGEN используйте
+Gravity UI (`Icons.<Имя>` в лаунчере); мини-приложения используют официальные SVG того же набора через SDK.
+Цвет иконки задаёт класс `text-*`, который передаёт сам элемент, поэтому он совпадает с цветом соседнего
+текста. Нативных модулей лаунчера kit не требует. Анимации — только opacity и transform, на нативном
+драйвере (в вебе — без него); цвета не анимируются, их меняют слои `StateLayers`.
+
 ```tsx
 <Dialog>
   <DialogTrigger asChild>

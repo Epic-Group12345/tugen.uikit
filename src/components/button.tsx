@@ -2,12 +2,21 @@ import React, { useMemo } from 'react';
 import {
   Animated,
   Pressable,
+  StyleSheet,
   View,
   type GestureResponderEvent,
   type MouseEvent,
   type PressableProps,
 } from 'react-native';
 import { StateLayers, useAnimatedFlag, usePressFeedback } from '../animation';
+import {
+  GLASS_FILL,
+  buttonDrop,
+  buttonRims,
+  makeGlass,
+  type Glass,
+} from '../glass';
+import { GlassLayers, useGlassRadius } from './glass';
 import { radiusProps, useInnerRadius } from '../radius';
 import type { IconComponent } from './icon';
 import { Text } from './text';
@@ -110,6 +119,28 @@ const ICON_SIZE: Record<ButtonSize, number> = { sm: 14, md: 14, lg: 16 };
 
 const DIMMED = { opacity: 0.5 };
 
+// Стекло кнопки — как у кнопок лаунчера (DESIGN.md, «Статичное стекло»): затемнение, тень 0 3 8 −4 и
+// кромки. Наведение — кромки плотнее, нажатие — кромки и тень уходят к белому. Слои накладываются
+// друг на друга и проявляются прозрачностью. Цвета — классы-токены не нужны: это значения из макета
+const WHITE = '#FCFFFF';
+const SHADOW = '#062426';
+const PRESS_WHITE = '#E3E6E6';
+const GLASS_REST: Glass = makeGlass({
+  fill: GLASS_FILL,
+  drop: buttonDrop(SHADOW, 0.2),
+  inner: buttonRims(WHITE, WHITE, 0.6),
+});
+const GLASS_HOVER: Glass = makeGlass({
+  fill: GLASS_FILL,
+  drop: buttonDrop(SHADOW, 0.4),
+  inner: buttonRims(WHITE, WHITE, 1),
+});
+const GLASS_PRESS: Glass = makeGlass({
+  fill: GLASS_FILL,
+  drop: buttonDrop(WHITE, 0.2),
+  inner: buttonRims(PRESS_WHITE, PRESS_WHITE, 1),
+});
+
 export const Button: React.FC<ButtonProps> = ({
   children,
   onPress,
@@ -127,6 +158,8 @@ export const Button: React.FC<ButtonProps> = ({
   const [base, hovered, pressed] = LAYERS[variant];
   // У края окна, меню или уведомления радиус — по правилу вложенности, иначе rounded-lg
   const rounded = radiusProps(useInnerRadius('lg'));
+  // Слои стекла берут то же скругление, что и фон кнопки
+  const glassRadius = useGlassRadius(rounded.className, rounded.style);
 
   return (
     <Pressable
@@ -153,6 +186,19 @@ export const Button: React.FC<ButtonProps> = ({
             { className: pressed, progress: press },
           ]}
         />
+        <GlassLayers glass={GLASS_REST} radius={glassRadius} />
+        <Animated.View
+          pointerEvents="none"
+          style={[StyleSheet.absoluteFill, { opacity: hover }]}
+        >
+          <GlassLayers glass={GLASS_HOVER} radius={glassRadius} />
+        </Animated.View>
+        <Animated.View
+          pointerEvents="none"
+          style={[StyleSheet.absoluteFill, { opacity: press }]}
+        >
+          <GlassLayers glass={GLASS_PRESS} radius={glassRadius} />
+        </Animated.View>
         <View
           className={`flex-row items-center justify-center gap-1.5 ${PADDING[size]}`}
         >

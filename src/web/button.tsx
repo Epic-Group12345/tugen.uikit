@@ -29,6 +29,11 @@ const VARIANT: Record<ButtonVariant, string> = {
   danger: 'bg-red-600 hover:bg-red-700 active:bg-red-800 text-mist-50',
 };
 
+// Стекло кнопки — как в RN-версии (DESIGN.md, «Статичное стекло»): затемнение #17191A 35% под
+// содержимым, тень 0 3 8 −4 и кромки. В вебе это классы box-shadow и псевдоэлемент before:. Классы целиком
+const GLASS =
+  'relative shadow-[0_3px_8px_-4px_rgba(6,36,38,0.2),inset_0_2px_2px_-1px_rgba(252,255,255,0.6),inset_0_-1px_3px_-2px_rgba(252,255,255,0.6)] hover:shadow-[0_3px_8px_-4px_rgba(6,36,38,0.4),inset_0_2px_2px_-1px_rgba(252,255,255,1),inset_0_-1px_3px_-2px_rgba(252,255,255,1)] active:shadow-[0_3px_8px_-4px_rgba(252,255,255,0.2),inset_0_2px_2px_-1px_rgba(227,230,230,1),inset_0_-1px_3px_-2px_rgba(227,230,230,1)] before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:bg-[rgba(23,25,26,0.35)] before:content-[""]';
+
 const SIZE: Record<ButtonSize, string> = {
   sm: 'px-3 py-1.5 text-sm',
   md: 'px-4 py-2 text-sm',
@@ -76,6 +81,7 @@ export const Button: React.FC<ButtonProps> = ({
       className={cx(
         PRESSABLE,
         'gap-1.5 whitespace-nowrap',
+        GLASS,
         VARIANT[variant],
         SIZE[size],
         rounded.className,
@@ -84,9 +90,9 @@ export const Button: React.FC<ButtonProps> = ({
       )}
       style={rounded.style ? { ...rounded.style, ...style } : style}
     >
-      {Icon && <Icon size={ICON_SIZE[size]} className="shrink-0" />}
+      {Icon && <Icon size={ICON_SIZE[size]} className="relative shrink-0" />}
       {children !== undefined && children !== null && (
-        <span className="truncate">{children}</span>
+        <span className="relative truncate">{children}</span>
       )}
     </button>
   );

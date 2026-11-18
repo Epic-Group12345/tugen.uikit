@@ -117,3 +117,6 @@ export * from './components/progress';
 export * from './components/alert';
 export * from './components/toast';
 export * from './components/kbd';
+export { makeGlass, buttonDrop, buttonRims, GLASS_FILL, type Glass } from './glass';
+export { GlassView, GlassLayers, useGlassRadius } from './components/glass';
+export * as Reusables from './reusables';
